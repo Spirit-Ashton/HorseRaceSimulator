@@ -32,6 +32,8 @@ public class Horse
     public void fall()
     {
         this.fallen  = true;
+
+        return;
     }
     
     public double getConfidence()
@@ -56,7 +58,9 @@ public class Horse
     
     public void goBackToStart()
     {
-        
+        this.distance = 0;
+
+        return;
     }
     
     public boolean hasFallen()
@@ -65,18 +69,21 @@ public class Horse
     }
 
     public void moveForward()
-    {
-        
+    {this.distance = this.distance + 1;
     }
 
     public void setConfidence(double newConfidence)
     {
-        
+        this.confidence = newConfidence;
+
+        return;
     }
     
     public void setSymbol(char newSymbol)
     {
-        
+        this.symbol = newSymbol;
+
+        return;
     }
     
 }
