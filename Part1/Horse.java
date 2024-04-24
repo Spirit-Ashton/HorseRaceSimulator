@@ -27,13 +27,11 @@ public class Horse
        this.fallen = false;
        this.confidence = horseConfidence;
     }
-    
-    
-    
+
     //Other methods of class Horse
     public void fall()
     {
-
+        this.fallen  = true;
     }
     
     public double getConfidence()
