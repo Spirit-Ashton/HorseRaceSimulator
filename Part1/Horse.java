@@ -36,22 +36,22 @@ public class Horse
     
     public double getConfidence()
     {
-        
+        return this.confidence;
     }
     
     public int getDistanceTravelled()
     {
-        
+        return this.distance;
     }
     
     public String getName()
     {
-        
+        return this.name;
     }
     
     public char getSymbol()
     {
-        
+        return this.symbol;
     }
     
     public void goBackToStart()
@@ -61,7 +61,7 @@ public class Horse
     
     public boolean hasFallen()
     {
-        
+        return this.fallen;
     }
 
     public void moveForward()
