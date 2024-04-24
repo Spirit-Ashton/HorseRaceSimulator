@@ -21,7 +21,11 @@ public class Horse
      */
     public Horse(char horseSymbol, String horseName, double horseConfidence)
     {
-       
+       this.name =  horseName;
+       this.symbol = horseSymbol;
+       this.distance = 0;
+       this.fallen = false;
+       this.confidence = horseConfidence;
     }
     
     
@@ -29,7 +33,7 @@ public class Horse
     //Other methods of class Horse
     public void fall()
     {
-        
+
     }
     
     public double getConfidence()
