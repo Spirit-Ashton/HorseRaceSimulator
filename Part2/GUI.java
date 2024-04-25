@@ -3,6 +3,7 @@ import java.awt.*;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 
@@ -10,6 +11,8 @@ public class GUI extends JFrame{
 
     private static Race mainRace;
     private static JFrame mainFrame;
+
+    private static ArrayList<Horse> AllHorses = new ArrayList<>();
 
     public GUI() {
 
@@ -26,12 +29,13 @@ public class GUI extends JFrame{
         mainFrame.add(TitleScreen);
 
         JPanel HomeScreen = new JPanel(new GridBagLayout());
-//        HomeScreen.setVisible(false);
         HomeScreen.setBackground(Color.decode("#392F5A"));
 
         JPanel NewRaceScreen = new JPanel(new GridBagLayout());
-//        NewRaceScreen.setVisible(false);
         NewRaceScreen.setBackground(Color.decode("#392F5A"));
+
+        JPanel AddHorseScreen = new JPanel(new GridBagLayout());
+        AddHorseScreen.setBackground(Color.decode("#392F5A"));
 
         //Title Screen////////////////////////////////////////////////////////////////////
 
@@ -56,21 +60,21 @@ public class GUI extends JFrame{
             TitlePanel.setBackground(new Color(0,0,0,0));
             TitleLabel.setForeground(Color.decode("#FFF8F0"));
 
-            GridBagConstraints titleConstraints = new GridBagConstraints();
+            GridBagConstraints gridConstraints = new GridBagConstraints();
 
-            titleConstraints.insets = new Insets(2,2,2,2);
-            titleConstraints.gridx = 0;
-            titleConstraints.gridy = 1;
-            titleConstraints.ipadx = 15;
-            titleConstraints.ipady = 10;
-            titleConstraints.fill = GridBagConstraints.BOTH;
+            gridConstraints.insets = new Insets(2,2,2,2);
+            gridConstraints.gridx = 0;
+            gridConstraints.gridy = 1;
+            gridConstraints.ipadx = 15;
+            gridConstraints.ipady = 10;
+            gridConstraints.fill = GridBagConstraints.BOTH;
 
-            TitleScreen.add(startButton, titleConstraints);
+            TitleScreen.add(startButton, gridConstraints);
 
-            titleConstraints.gridy = 0;
-            titleConstraints.insets = new Insets(2, 2, 50, 2);
+            gridConstraints.gridy = 0;
+            gridConstraints.insets = new Insets(2, 2, 50, 2);
 
-            TitleScreen.add(TitlePanel, titleConstraints);
+            TitleScreen.add(TitlePanel, gridConstraints);
 
 
         mainFrame.setVisible(true);
@@ -82,7 +86,6 @@ public class GUI extends JFrame{
 
             JButton RaceButton = new JButton("Create Race!");
             RaceButton.addActionListener(e -> switchScreens(HomeScreen, NewRaceScreen));
-//            RaceButton.addActionListener(e -> NewRace());
             RaceButton.setFocusPainted(false);
             RaceButton.setBackground(Color.decode("#F4D06F"));
             RaceButton.setForeground(Color.decode("#23231A"));
@@ -97,30 +100,40 @@ public class GUI extends JFrame{
             HorsesButton.setBackground(Color.decode("#F4D06F"));
             HorsesButton.setForeground(Color.decode("#23231A"));
 
+            JButton AddHorseButton = new JButton("New Horse!");
+            AddHorseButton.addActionListener(e -> switchScreens(HomeScreen, AddHorseScreen));
+            AddHorseButton.setFocusPainted(false);
+            AddHorseButton.setBackground(Color.decode("#F4D06F"));
+            AddHorseButton.setForeground(Color.decode("#23231A"));
+
             JButton StatisticsButton = new JButton("Statistics and Analytics");
             StatisticsButton.setFocusPainted(false);
             StatisticsButton.setBackground(Color.decode("#F4D06F"));
             StatisticsButton.setForeground(Color.decode("#23231A"));
 
-            titleConstraints.insets = new Insets(2,2,2,2);
-            titleConstraints.gridx = 0;
-            titleConstraints.gridy = 0;
-            titleConstraints.ipadx = 15;
-            titleConstraints.ipady = 10;
+            gridConstraints.insets = new Insets(2,2,2,2);
+            gridConstraints.gridx = 0;
+            gridConstraints.gridy = 0;
+            gridConstraints.ipadx = 15;
+            gridConstraints.ipady = 10;
 
-            HomeScreen.add(RaceButton, titleConstraints);
+            HomeScreen.add(RaceButton, gridConstraints);
 
-            titleConstraints.gridx = 1;
+            gridConstraints.gridx = 1;
 
-            HomeScreen.add(TrackButton, titleConstraints);
+            HomeScreen.add(TrackButton, gridConstraints);
 
-            titleConstraints.gridx = 2;
+            gridConstraints.gridx = 2;
 
-            HomeScreen.add(HorsesButton, titleConstraints);
+            HomeScreen.add(HorsesButton, gridConstraints);
 
-            titleConstraints.gridx = 3;
+            gridConstraints.gridx = 3;
 
-            HomeScreen.add(StatisticsButton, titleConstraints);
+            HomeScreen.add(AddHorseButton, gridConstraints);
+
+            gridConstraints.gridx = 4;
+
+            HomeScreen.add(StatisticsButton, gridConstraints);
 
 
         //New Race Screen//////////////////////////////////////////////////////////////////////
@@ -170,40 +183,99 @@ public class GUI extends JFrame{
             NewRaceFields[1] = RaceDistance;
 
             JButton RaceSubmitButton = new JButton("Submit!");
-            RaceSubmitButton.addActionListener(e -> checkTextFields(NewRaceFields));
-//            RaceSubmitButton.addActionListener(e -> NewRace(LaneNumber.getText(), RaceDistance.getText()));
-//            RaceSubmitButton.addActionListener(e -> switchScreens(NewRaceScreen));
+            RaceSubmitButton.addActionListener(e -> intCheckTextFields(NewRaceFields));
             RaceSubmitButton.setFocusPainted(false);
             RaceSubmitButton.setBackground(Color.decode("#F4D06F"));
             RaceSubmitButton.setForeground(Color.decode("#23231A"));
 
-            titleConstraints.insets = new Insets(2,2,2,2);
-            titleConstraints.gridx = 0;
-            titleConstraints.gridy = 0;
-            titleConstraints.ipadx = 15;
-            titleConstraints.ipady = 10;
-            titleConstraints.fill = GridBagConstraints.NONE;
+            gridConstraints.insets = new Insets(2,2,2,2);
+            gridConstraints.gridx = 0;
+            gridConstraints.gridy = 0;
+            gridConstraints.ipadx = 15;
+            gridConstraints.ipady = 10;
+            gridConstraints.fill = GridBagConstraints.NONE;
 
-            NewRaceScreen.add(LaneLabel, titleConstraints);
+            NewRaceScreen.add(LaneLabel, gridConstraints);
 
-            titleConstraints.gridy = 1;
-            titleConstraints.insets = new Insets(2,2,50,2);
+            gridConstraints.gridy = 1;
+            gridConstraints.insets = new Insets(2,2,50,2);
 
-            NewRaceScreen.add(LaneNumber, titleConstraints);
+            NewRaceScreen.add(LaneNumber, gridConstraints);
 
-            titleConstraints.gridy = 2;
-            titleConstraints.insets = new Insets(2,2,2,2);
+            gridConstraints.gridy = 2;
+            gridConstraints.insets = new Insets(2,2,2,2);
 
-            NewRaceScreen.add(DistanceLabel, titleConstraints);
+            NewRaceScreen.add(DistanceLabel, gridConstraints);
 
-            titleConstraints.gridy = 3;
+            gridConstraints.gridy = 3;
 
-            NewRaceScreen.add(RaceDistance, titleConstraints);
+            NewRaceScreen.add(RaceDistance, gridConstraints);
 
-            titleConstraints.gridy = 4;
-            titleConstraints.insets = new Insets(20,2,2,2);
+            gridConstraints.gridy = 4;
+            gridConstraints.insets = new Insets(20,2,2,2);
 
-            NewRaceScreen.add(RaceSubmitButton, titleConstraints);
+            NewRaceScreen.add(RaceSubmitButton, gridConstraints);
+
+        //Add Horse Screen////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        JLabel newHorseNameLabel = new JLabel("What would you like to name your new horse?");
+        newHorseNameLabel.setForeground(Color.decode("#FFF8F0"));
+
+        JTextField newHorseName = new JTextField(10);
+
+        JLabel newHorseConfidenceLabel = new JLabel("How Confident would you like your horse to be?");
+        newHorseConfidenceLabel.setForeground(Color.decode("#FFF8F0"));
+
+        JTextField newHorseConfidence = new JTextField(10);
+        newHorseConfidence.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                if(!newHorseConfidence.getText().equals("")){
+                    newHorseConfidence.setText("");
+                    newHorseConfidence.setForeground(Color.BLACK);
+                }
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                newHorseConfidence.setForeground(Color.GRAY);
+            }
+        });
+
+        JButton newHorseSubmitButton = new JButton("Submit!");
+        newHorseSubmitButton.addActionListener(e -> newHorseCheck(newHorseName, newHorseConfidence));
+        newHorseSubmitButton.setFocusPainted(false);
+        newHorseSubmitButton.setBackground(Color.decode("#F4D06F"));
+        newHorseSubmitButton.setForeground(Color.decode("#23231A"));
+
+        gridConstraints.insets = new Insets(2,2,2,2);
+        gridConstraints.gridx = 0;
+        gridConstraints.gridy = 0;
+        gridConstraints.ipadx = 15;
+        gridConstraints.ipady = 10;
+
+        AddHorseScreen.add(newHorseNameLabel, gridConstraints);
+
+        gridConstraints.gridy = 1;
+        gridConstraints.insets = new Insets(2, 2 ,50,2);
+
+        AddHorseScreen.add(newHorseName, gridConstraints);
+
+        gridConstraints.gridy = 2;
+        gridConstraints.insets = new Insets(2,2,2,2);
+
+        AddHorseScreen.add(newHorseConfidenceLabel, gridConstraints);
+
+        gridConstraints.gridy = 3;
+
+        AddHorseScreen.add(newHorseConfidence, gridConstraints);
+
+        gridConstraints.gridy = 4;
+        gridConstraints.insets = new Insets(20, 2 ,2,2);
+
+        AddHorseScreen.add(newHorseSubmitButton, gridConstraints);
+
+
 
 
 //        JButton HorseButton = new JButton("Add Horse!");
@@ -218,17 +290,17 @@ public class GUI extends JFrame{
 //        StartRaceButton.setBackground(Color.decode("#F4D06F"));
 //        StartRaceButton.setForeground(Color.decode("#23231A"));
 //
-//        titleConstraints.insets = new Insets(2,2,2,2);
-//        titleConstraints.gridx = 0;
-//        titleConstraints.gridy = 0;
-//        titleConstraints.ipadx = 15;
-//        titleConstraints.ipady = 10;
+//        gridConstraints.insets = new Insets(2,2,2,2);
+//        gridConstraints.gridx = 0;
+//        gridConstraints.gridy = 0;
+//        gridConstraints.ipadx = 15;
+//        gridConstraints.ipady = 10;
 //
-//        NewRaceScreen.add(HorseButton, titleConstraints);
+//        NewRaceScreen.add(HorseButton, gridConstraints);
 //
-//        titleConstraints.gridy = 1;
+//        gridConstraints.gridy = 1;
 //
-//        NewRaceScreen.add(StartRaceButton, titleConstraints);
+//        NewRaceScreen.add(StartRaceButton, gridConstraints);
 
 
     }
@@ -272,7 +344,22 @@ public class GUI extends JFrame{
         return "Applicable";
     }
 
-    public void checkTextFields(JTextField[] TextFields){
+    public  String  checkDouble( String checkValue){
+        if (checkValue.isEmpty()){
+            return "There is no value";
+        }
+        try{
+            if (Double.valueOf(checkValue) < 0 || Double.valueOf(checkValue) > 1) {
+                return "In-between 0 and 1";
+            }
+        } catch(Exception e) {
+            return "Not a number";
+        }
+
+        return "Applicable";
+    }
+
+    public void intCheckTextFields(JTextField[] TextFields){
         boolean Accepted = true;
         String checkReturn;
 
@@ -286,6 +373,22 @@ public class GUI extends JFrame{
 
         if(Accepted == true){
             NewRace(TextFields[0].getText(), TextFields[1].getText());
+        }
+    }
+
+    public void newHorseCheck(JTextField HorseName, JTextField HorseConfidence){
+        boolean Accepted = true;
+        String checkReturn;
+
+        checkReturn = checkDouble(HorseConfidence.getText());
+
+        if(!checkReturn.equals("Applicable")){
+            Accepted = false;
+            HorseConfidence.setText(checkReturn);
+        }
+
+        if(Accepted == true){
+            AllHorses.add( new Horse('*', HorseName.getText(), Double.valueOf(HorseConfidence.getText())));
         }
     }
 
