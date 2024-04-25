@@ -11,6 +11,8 @@ This is due to font limitations of the specific application, not the control pan
 
 Therefore, any terminals within IDE's or third party terminals (such as cmder) will have no issue displaying the Unicode.
 
+In saying this, to be able to view the Unicode you have to initiate your shell instance with "chcp 65001", This changes the code-point format to be able to display the Icons.
+
 Have fun racing!
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
