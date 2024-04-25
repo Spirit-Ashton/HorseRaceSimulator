@@ -208,9 +208,10 @@ public class Race
         
         //print the spaces after the horse
         multiplePrint(' ',spacesAfter);
-        
+
         //print the | for the end of the track
         System.out.print('|');
+        System.out.print(" " +  theHorse.getName().toUpperCase() + " (Current Confidence: " + theHorse.getConfidence() + ")" );
     }
         
     
