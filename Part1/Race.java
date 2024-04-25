@@ -1,5 +1,7 @@
 import java.util.concurrent.TimeUnit;
 import java.lang.Math;
+import java.io.PrintStream;
+import java.io.UnsupportedEncodingException;
 
 /**
  * A three-horse race, each horse running in its own lane
@@ -62,7 +64,7 @@ public class Race
      * then repeatedly moved forward until the 
      * race is finished
      */
-    public void startRace()
+    public void startRace() throws UnsupportedEncodingException
     {
         //declare a local variable to tell us when the race is finished
         boolean finished = false;
@@ -146,7 +148,7 @@ public class Race
     /***
      * Print the race on the terminal
      */
-    private void printRace()
+    private void printRace() throws UnsupportedEncodingException
     {
         System.out.print('\u000C');  //clear the terminal window
         
@@ -172,7 +174,7 @@ public class Race
      * |           X                      |
      * to show how far the horse has run
      */
-    private void printLane(Horse theHorse)
+    private void printLane(Horse theHorse) throws UnsupportedEncodingException
     {
         //calculate how many spaces are needed before
         //and after the horse
@@ -189,7 +191,10 @@ public class Race
         //else print the horse's symbol
         if(theHorse.hasFallen())
         {
+            PrintStream out = new PrintStream(System.out, true, "UTF-8");
             System.out.print('\u2322');
+//            System.out.print("\u274C");
+//            System.out.print("L");
         }
         else
         {
