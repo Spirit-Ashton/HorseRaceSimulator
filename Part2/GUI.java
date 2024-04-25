@@ -1,5 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.io.UnsupportedEncodingException;
 import java.util.Scanner;
 
@@ -127,15 +129,50 @@ public class GUI extends JFrame{
             LaneLabel.setForeground(Color.decode("#FFF8F0"));
 
             JTextField LaneNumber = new JTextField(10);
+            LaneNumber.setForeground(Color.GRAY);
+            LaneNumber.addFocusListener(new FocusListener() {
+                @Override
+                public void focusGained(FocusEvent e) {
+                    if(!LaneNumber.getText().equals("")){
+                        LaneNumber.setText("");
+                        LaneNumber.setForeground(Color.BLACK);
+                    }
+                }
+
+                @Override
+                public void focusLost(FocusEvent e) {
+                    LaneNumber.setForeground(Color.GRAY);
+                }
+            });
 
             JLabel DistanceLabel = new JLabel("How long is your track in metres?");
             DistanceLabel.setForeground(Color.decode("#FFF8F0"));
 
             JTextField RaceDistance = new JTextField(10);
+            RaceDistance.setForeground(Color.GRAY);
+            RaceDistance.addFocusListener(new FocusListener() {
+                @Override
+                public void focusGained(FocusEvent e) {
+                    if(!RaceDistance.getText().equals("")){
+                        RaceDistance.setText("");
+                        RaceDistance.setForeground(Color.BLACK);
+                    }
+                }
+
+                @Override
+                public void focusLost(FocusEvent e) {
+                    RaceDistance.setForeground(Color.GRAY);
+                }
+            });
+
+            JTextField[] NewRaceFields = new JTextField[2];
+            NewRaceFields[0] = LaneNumber;
+            NewRaceFields[1] = RaceDistance;
 
             JButton RaceSubmitButton = new JButton("Submit!");
-            RaceSubmitButton.addActionListener(e -> NewRace(LaneNumber.getText(), RaceDistance.getText()));
-            RaceSubmitButton.addActionListener(e -> switchScreens(NewRaceScreen));
+            RaceSubmitButton.addActionListener(e -> checkTextFields(NewRaceFields));
+//            RaceSubmitButton.addActionListener(e -> NewRace(LaneNumber.getText(), RaceDistance.getText()));
+//            RaceSubmitButton.addActionListener(e -> switchScreens(NewRaceScreen));
             RaceSubmitButton.setFocusPainted(false);
             RaceSubmitButton.setBackground(Color.decode("#F4D06F"));
             RaceSubmitButton.setForeground(Color.decode("#23231A"));
@@ -167,7 +204,7 @@ public class GUI extends JFrame{
             titleConstraints.insets = new Insets(20,2,2,2);
 
             NewRaceScreen.add(RaceSubmitButton, titleConstraints);
-            
+
 
 //        JButton HorseButton = new JButton("Add Horse!");
 //        HorseButton.addActionListener(e -> addHorse());
@@ -215,21 +252,48 @@ public class GUI extends JFrame{
         return;
     }
 
-    public void NewRace(){
-        int lanes;
-        int distance;
-        Scanner SCANNER = new Scanner(System.in);
-        System.out.println("How Many Lanes Would you like to have?: ");
-        lanes = SCANNER.nextInt();
-        System.out.println("How long is the race?(m): ");
-        distance = SCANNER.nextInt();
-        mainRace = new Race(lanes, distance);
+    public  String  checkInt( String checkValue){
+        if (checkValue.isEmpty()){
+            return "There is no value";
+        }
+        try{
+            if (Integer.valueOf(checkValue) <= 0) {
+                return "Invalid number";
+            }
+        } catch(Exception e) {
+            try{
+                Double.valueOf(checkValue);
+                return "No Decimals";
+            } catch (Exception E) {
+                return "Not a number";
+            }
+        }
+
+        return "Applicable";
     }
+
+    public void checkTextFields(JTextField[] TextFields){
+        boolean Accepted = true;
+        String checkReturn;
+
+        for( JTextField J : TextFields){
+            checkReturn = checkInt(J.getText());
+            if(!checkReturn.equals("Applicable")){
+                Accepted = false;
+                J.setText(checkReturn);
+            }
+        }
+
+        if(Accepted == true){
+            NewRace(TextFields[0].getText(), TextFields[1].getText());
+        }
+    }
+
 
     public void NewRace(String lanes, String distance){
         mainRace = new Race(Integer.valueOf(lanes), Integer.valueOf(distance));
 
-
+        return;
     }
 
     public void addHorse(){
