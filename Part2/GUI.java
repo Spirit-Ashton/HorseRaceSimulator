@@ -2,8 +2,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.geom.CubicCurve2D;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Scanner;
 
 
@@ -38,6 +40,9 @@ public class GUI extends JFrame{
 
         JPanel AddHorseScreen = new JPanel(new GridBagLayout());
         AddHorseScreen.setBackground(Color.decode("#392F5A"));
+
+        JPanel ChooseHorsesScreen = new JPanel(new GridBagLayout());
+        ChooseHorsesScreen.setBackground(Color.decode("#392F5A"));
 
         //Title Screen////////////////////////////////////////////////////////////////////
 
@@ -92,10 +97,47 @@ public class GUI extends JFrame{
             RaceButton.setBackground(Color.decode("#F4D06F"));
             RaceButton.setForeground(Color.decode("#23231A"));
 
-            JButton TrackButton = new JButton("Start Race!");
-            TrackButton.setFocusPainted(false);
-            TrackButton.setBackground(Color.decode("#F4D06F"));
-            TrackButton.setForeground(Color.decode("#23231A"));
+            JButton StartButton = new JButton("Start Race!");
+            StartButton.addActionListener(e -> switchScreens(HomeScreen, ChooseHorsesScreen));
+            StartButton.addActionListener(e-> {
+
+                JPanel CHButtonPanel = new JPanel(new FlowLayout());
+                CHButtonPanel.setBackground(new Color(0,0,0,0));
+//                CHButtonPanel.setName("Button Panel");
+
+
+                HashMap<Horse, JLabel> HorseLabelMap = new HashMap<>();
+
+                for (Horse H : AllHorses){
+                    JLabel HName = new JLabel(H.getName());
+                    HName.setForeground(Color.decode("#FFF8F0"));
+
+                    HorseLabelMap.put(H, HName);
+                }
+
+
+                gridConstraints.insets = new Insets(2,2,50,2);
+                gridConstraints.gridx = 0;
+                gridConstraints.gridy = 1;
+                gridConstraints.ipadx = 15;
+                gridConstraints.ipady = 10;
+
+                ChooseHorsesScreen.add(CHButtonPanel, gridConstraints);
+
+                if(HorseLabelMap.isEmpty()){
+                    JLabel noHorsesLabel = new JLabel("No Horses to Race :(");
+                    noHorsesLabel.setForeground(Color.decode("#FFF8F0"));
+                    CHButtonPanel.add(noHorsesLabel);
+                } else {
+                    for (JLabel J : HorseLabelMap.values()) {
+                        CHButtonPanel.add(J);
+                    }
+                }
+
+            });
+            StartButton.setFocusPainted(false);
+            StartButton.setBackground(Color.decode("#F4D06F"));
+            StartButton.setForeground(Color.decode("#23231A"));
 
             JButton HorsesButton = new JButton("Customize Horses!");
             HorsesButton.setFocusPainted(false);
@@ -123,7 +165,7 @@ public class GUI extends JFrame{
 
             gridConstraints.gridx = 1;
 
-            HomeScreen.add(TrackButton, gridConstraints);
+            HomeScreen.add(StartButton, gridConstraints);
 
             gridConstraints.gridx = 2;
 
@@ -277,7 +319,67 @@ public class GUI extends JFrame{
 
         AddHorseScreen.add(newHorseSubmitButton, gridConstraints);
 
+    //Choose Horses Screen/////////////////////////////////////////////////////////////////////
 
+        JLabel CHTitle = new JLabel("Which Horses are Racing?");
+        CHTitle.setForeground(Color.decode("#FFF8F0"));
+//        System.out.println(CHTitle.getFont());
+        CHTitle.setFont(new Font("Dialog", Font.BOLD, 20));
+
+        JLabel HorseName = new JLabel("Horse Name");
+        HorseName.setForeground(Color.decode("#FFF8F0"));
+
+//        JPanel CHButtonPanel = new JPanel(new FlowLayout());
+//        CHButtonPanel.setBackground(new Color(0,0,0,0));
+
+        HashMap<Horse, JLabel> HorseLabelMap = new HashMap<>();
+
+        for (Horse H : AllHorses){
+            JLabel HName = new JLabel(H.getName());
+            HName.setForeground(Color.decode("#FFF8F0"));
+
+            HorseLabelMap.put(H, HName);
+        }
+
+        JButton chooseHorsesBackButton = new JButton("Back");
+        chooseHorsesBackButton.addActionListener(e -> HomeScreen());
+        chooseHorsesBackButton.addActionListener(e ->{
+//            System.out.println(ChooseHorsesScreen.getComponent(2).getName());
+            ChooseHorsesScreen.remove(2);
+        });
+
+        chooseHorsesBackButton.setFocusPainted(false);
+        chooseHorsesBackButton.setBackground(Color.decode("#F4D06F"));
+        chooseHorsesBackButton.setForeground(Color.decode("#23231A"));
+
+        gridConstraints.insets = new Insets(2,2,50,2);
+        gridConstraints.gridx = 0;
+        gridConstraints.gridy = 0;
+        gridConstraints.ipadx = 15;
+        gridConstraints.ipady = 10;
+
+        ChooseHorsesScreen.add(CHTitle, gridConstraints);
+
+        gridConstraints.gridy = 1;
+        gridConstraints.insets = new Insets(2,2,50,2);
+
+//        for(JLabel J : HorseLabelMap.values()){
+//            ChooseHorsesScreen.add(J,gridConstraints);
+//            gridConstraints.gridx = gridConstraints.gridx + 1;
+//        }
+
+//        ChooseHorsesScreen.add(CHButtonPanel, gridConstraints);
+
+//        for(JLabel J :HorseLabelMap.values()){
+//            CHButtonPanel.add(J);
+//        }
+
+        gridConstraints.gridx = 0;
+        gridConstraints.gridy = 2;
+
+        ChooseHorsesScreen.add(chooseHorsesBackButton, gridConstraints);
+
+//        ChooseHorsesScreen.add(HorseName, gridConstraints);
 
 
 //        JButton HorseButton = new JButton("Add Horse!");
@@ -323,6 +425,7 @@ public class GUI extends JFrame{
         mainFrame.revalidate();
 
         CurrentScreen = ScreenOn;
+
         return;
     }
 
@@ -334,6 +437,7 @@ public class GUI extends JFrame{
         mainFrame.add(HomeScreen);
         mainFrame.repaint();
         mainFrame.revalidate();
+        CurrentScreen = HomeScreen;
 
         return;
     }
@@ -387,6 +491,9 @@ public class GUI extends JFrame{
 
         if(Accepted == true){
             NewRace(TextFields[0].getText(), TextFields[1].getText());
+            for(JTextField J : TextFields){
+                J.setText("");
+            }
             HomeScreen();
         }
     }
