@@ -138,6 +138,8 @@ public class Race
     {
         if (theHorse.getDistanceTravelled() == raceLength)
         {
+            System.out.print("And the winner is " + theHorse.getName());
+            theHorse.setConfidence(theHorse.getConfidence() + 0.1);
             return true;
         }
         else
@@ -211,7 +213,10 @@ public class Race
 
         //print the | for the end of the track
         System.out.print('|');
-        System.out.print(" " +  theHorse.getName().toUpperCase() + " (Current Confidence: " + theHorse.getConfidence() + ")" );
+        System.out.print(" " +  theHorse.getName().toUpperCase() + " (Current Confidence: " );
+        System.out.printf("%.1f" , theHorse.getConfidence());
+        System.out.print(")");
+
     }
         
     
