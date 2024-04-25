@@ -131,12 +131,14 @@ public class GUI extends JFrame{
             JLabel DistanceLabel = new JLabel("How long is your track in metres?");
             DistanceLabel.setForeground(Color.decode("#FFF8F0"));
 
+            JTextField RaceDistance = new JTextField(10);
+
             JButton RaceSubmitButton = new JButton("Submit!");
+            RaceSubmitButton.addActionListener(e -> NewRace(LaneNumber.getText(), RaceDistance.getText()));
+            RaceSubmitButton.addActionListener(e -> switchScreens(NewRaceScreen));
             RaceSubmitButton.setFocusPainted(false);
             RaceSubmitButton.setBackground(Color.decode("#F4D06F"));
             RaceSubmitButton.setForeground(Color.decode("#23231A"));
-
-            JTextField RaceDistance = new JTextField(10);
 
             titleConstraints.insets = new Insets(2,2,2,2);
             titleConstraints.gridx = 0;
@@ -165,6 +167,7 @@ public class GUI extends JFrame{
             titleConstraints.insets = new Insets(20,2,2,2);
 
             NewRaceScreen.add(RaceSubmitButton, titleConstraints);
+            
 
 //        JButton HorseButton = new JButton("Add Horse!");
 //        HorseButton.addActionListener(e -> addHorse());
@@ -221,6 +224,12 @@ public class GUI extends JFrame{
         System.out.println("How long is the race?(m): ");
         distance = SCANNER.nextInt();
         mainRace = new Race(lanes, distance);
+    }
+
+    public void NewRace(String lanes, String distance){
+        mainRace = new Race(Integer.valueOf(lanes), Integer.valueOf(distance));
+
+
     }
 
     public void addHorse(){
