@@ -1,7 +1,9 @@
 import javax.swing.*;
 import java.awt.*;
 
+
 public class GUI extends JFrame{
+
 
     public GUI() {
         JFrame mainFrame = new JFrame("Horse Race Simulator");
@@ -14,51 +16,98 @@ public class GUI extends JFrame{
 
         mainFrame.add(TitleScreen);
 
-        JPanel TitlePanel = new JPanel(new BorderLayout());
+        JPanel HomeScreen = new JPanel(new GridBagLayout());
+        HomeScreen.setVisible(false);
+        HomeScreen.setBackground(Color.decode("#392F5A"));
 
-        JLabel TitleLabel = new JLabel("Horse Race Simulator!", SwingConstants.CENTER);
+        //Title Screen////////////////////////////////////////////////////////////////////
 
-        JButton startButton = new JButton("Start!");
+            JPanel TitlePanel = new JPanel(new BorderLayout());
 
-//        startButton.addActionListener(e ->);
-        startButton.setFocusPainted(false);
-        startButton.setBackground(Color.decode("#F4D06F"));
-        startButton.setForeground(Color.decode("#23231A"));
-//        startButton.setBorder(new LineBorder(Color.BLUE, 2));
+            JLabel TitleLabel = new JLabel("Horse Race Simulator!", SwingConstants.CENTER);
 
-        TitlePanel.add(TitleLabel);
-//        TitlePanel.setBorder(new LineBorder(Color.BLUE, 2));
-//        mainFrame.add(TitlePanel);
+            JButton startButton = new JButton("Start!");
+
+            startButton.addActionListener(e -> switchScreens(TitleScreen, HomeScreen));
+            startButton.setFocusPainted(false);
+            startButton.setBackground(Color.decode("#F4D06F"));
+            startButton.setForeground(Color.decode("#23231A"));
+    //        startButton.setBorder(new LineBorder(Color.BLUE, 2));
+
+            TitlePanel.add(TitleLabel);
+    //        TitlePanel.setBorder(new LineBorder(Color.BLUE, 2));
+    //        mainFrame.add(TitlePanel);
 
 
 
-        TitlePanel.setBackground(new Color(0,0,0,0));
-        TitleLabel.setForeground(Color.decode("#FFF8F0"));
-        TitleLabel.setLocation(100,200);
+            TitlePanel.setBackground(new Color(0,0,0,0));
+            TitleLabel.setForeground(Color.decode("#FFF8F0"));
 
-        GridBagConstraints titleConstraints = new GridBagConstraints();
+            GridBagConstraints titleConstraints = new GridBagConstraints();
 
-        titleConstraints.insets = new Insets(2,2,2,2);
-        titleConstraints.gridx = 0;
-        titleConstraints.gridy = 1;
-        titleConstraints.ipadx = 15;
-        titleConstraints.ipady = 10;
-        titleConstraints.fill = GridBagConstraints.BOTH;
+            titleConstraints.insets = new Insets(2,2,2,2);
+            titleConstraints.gridx = 0;
+            titleConstraints.gridy = 1;
+            titleConstraints.ipadx = 15;
+            titleConstraints.ipady = 10;
+            titleConstraints.fill = GridBagConstraints.BOTH;
 
-        TitleScreen.add(startButton, titleConstraints);
+            TitleScreen.add(startButton, titleConstraints);
 
-        titleConstraints.gridy = 0;
-        titleConstraints.insets = new Insets(2, 2, 50, 2);
+            titleConstraints.gridy = 0;
+            titleConstraints.insets = new Insets(2, 2, 50, 2);
 
-        TitleScreen.add(TitlePanel, titleConstraints);
+            TitleScreen.add(TitlePanel, titleConstraints);
 
 
         mainFrame.setVisible(true);
+
+        mainFrame.add(HomeScreen);
+
+        //Home Screen/////////////////////////////////////////////////////////////////////////////////////////
+
+        JButton TrackButton = new JButton("Create Track!");
+        TrackButton.setFocusPainted(false);
+        TrackButton.setBackground(Color.decode("#F4D06F"));
+        TrackButton.setForeground(Color.decode("#23231A"));
+
+        JButton HorsesButton = new JButton("Customize Horses!");
+        HorsesButton.setFocusPainted(false);
+        HorsesButton.setBackground(Color.decode("#F4D06F"));
+        HorsesButton.setForeground(Color.decode("#23231A"));
+
+        JButton StatisticsButton = new JButton("Statistics and Analytics");
+        StatisticsButton.setFocusPainted(false);
+        StatisticsButton.setBackground(Color.decode("#F4D06F"));
+        StatisticsButton.setForeground(Color.decode("#23231A"));
+
+        titleConstraints.insets = new Insets(2,2,2,2);
+        titleConstraints.gridx = 0;
+        titleConstraints.gridy = 0;
+        titleConstraints.ipadx = 15;
+        titleConstraints.ipady = 10;
+
+        HomeScreen.add(TrackButton, titleConstraints);
+
+        titleConstraints.gridx = 1;
+
+        HomeScreen.add(HorsesButton, titleConstraints);
+
+        titleConstraints.gridx = 2;
+
+        HomeScreen.add(StatisticsButton, titleConstraints);
     }
 
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(GUI::new);
+    }
+
+    public void switchScreens(JPanel ScreenOff,  JPanel ScreenOn){
+        ScreenOff.setVisible(false);
+        ScreenOn.setVisible(true);
+
+        return;
     }
 
 
