@@ -66,6 +66,7 @@ public class Race
      */
     public void startRace() throws UnsupportedEncodingException
     {
+        PrintStream out = new PrintStream(System.out, true, "UTF-8");
         //declare a local variable to tell us when the race is finished
         boolean finished = false;
         
@@ -150,6 +151,8 @@ public class Race
      */
     private void printRace() throws UnsupportedEncodingException
     {
+        PrintStream out = new PrintStream(System.out, true, "UTF-8");
+
         System.out.print('\u000C');  //clear the terminal window
         
         multiplePrint('=',raceLength+3); //top edge of track
@@ -176,6 +179,7 @@ public class Race
      */
     private void printLane(Horse theHorse) throws UnsupportedEncodingException
     {
+        PrintStream out = new PrintStream(System.out, true, "UTF-8");
         //calculate how many spaces are needed before
         //and after the horse
         int spacesBefore = theHorse.getDistanceTravelled();
@@ -191,10 +195,7 @@ public class Race
         //else print the horse's symbol
         if(theHorse.hasFallen())
         {
-            PrintStream out = new PrintStream(System.out, true, "UTF-8");
-            System.out.print('\u2322');
-//            System.out.print("\u274C");
-//            System.out.print("L");
+            System.out.print("\u274C");
         }
         else
         {
@@ -215,8 +216,10 @@ public class Race
      * 
      * @param aChar the character to Print
      */
-    private void multiplePrint(char aChar, int times)
+    private void multiplePrint(char aChar, int times) throws UnsupportedEncodingException
     {
+        PrintStream out = new PrintStream(System.out, true, "UTF-8");
+
         int i = 0;
         while (i < times)
         {
