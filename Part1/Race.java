@@ -1,18 +1,21 @@
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 import java.lang.Math;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 
 /**
- * A three-horse race, each horse running in its own lane
+ * A multi-horse race, each horse running in its own lane
  * for a given distance
  * 
  * @author McFarewell
- * @version 1.0
+ * @Editor Spirit-Ashton
+ * @version 2.0
  */
 public class Race
 {
     private int raceLength;
+    private ArrayList<Horse> horseArray;
     private Horse lane1Horse;
     private Horse lane2Horse;
     private Horse lane3Horse;
@@ -23,10 +26,11 @@ public class Race
      * 
      * @param distance the length of the racetrack (in metres/yards...)
      */
-    public Race(int distance)
+    public Race( int distance)
     {
         // initialise instance variables
         raceLength = distance;
+        horseArray = new ArrayList<>();
         lane1Horse = null;
         lane2Horse = null;
         lane3Horse = null;
@@ -40,22 +44,23 @@ public class Race
      */
     public void addHorse(Horse theHorse, int laneNumber)
     {
-        if (laneNumber == 1)
-        {
-            lane1Horse = theHorse;
-        }
-        else if (laneNumber == 2)
-        {
-            lane2Horse = theHorse;
-        }
-        else if (laneNumber == 3)
-        {
-            lane3Horse = theHorse;
-        }
-        else
-        {
-            System.out.println("Cannot add horse to lane " + laneNumber + " because there is no such lane");
-        }
+//        if (laneNumber == 1)
+//        {
+//            lane1Horse = theHorse;
+//        }
+//        else if (laneNumber == 2)
+//        {
+//            lane2Horse = theHorse;
+//        }
+//        else if (laneNumber == 3)
+//        {
+//            lane3Horse = theHorse;
+//        }
+//        else
+//        {
+//            System.out.println("Cannot add horse to lane " + laneNumber + " because there is no such lane");
+//        }
+        horseArray.add(theHorse);
     }
     
     /**
@@ -71,30 +76,62 @@ public class Race
         boolean finished = false;
         
         //reset all the lanes (all horses not fallen and back to 0). 
-        lane1Horse.goBackToStart();
-        lane2Horse.goBackToStart();
-        lane3Horse.goBackToStart();
+//        lane1Horse.goBackToStart();
+//        lane2Horse.goBackToStart();
+//        lane3Horse.goBackToStart();
+        for(int i = 0; i < horseArray.size(); i++)
+        {
+            horseArray.get(i).goBackToStart();
+        }
                       
         while (!finished)
         {
             //move each horse
-            moveHorse(lane1Horse);
-            moveHorse(lane2Horse);
-            moveHorse(lane3Horse);
+//            moveHorse(lane1Horse);
+//            moveHorse(lane2Horse);
+//            moveHorse(lane3Horse);
+            for(int i = 0; i < horseArray.size(); i++)
+            {
+                moveHorse(horseArray.get(i));
+            }
                         
             //print the race positions
             printRace();
             
             //if any of the three horses has won the race is finished
-            if ( raceWonBy(lane1Horse) || raceWonBy(lane2Horse) || raceWonBy(lane3Horse) )
+//            if ( raceWonBy(lane1Horse) || raceWonBy(lane2Horse) || raceWonBy(lane3Horse) )
+//            {
+//                finished = true;
+//            }
+            for(int i = 0; i < horseArray.size(); i++)
             {
-                finished = true;
+                if (raceWonBy(horseArray.get(i))){
+                    finished = true;
+                }
             }
-           
             //wait for 100 milliseconds
             try{ 
                 TimeUnit.MILLISECONDS.sleep(100);
             }catch(Exception e){}
+
+//            if(lane1Horse.hasFallen() && lane2Horse.hasFallen() && lane3Horse.hasFallen())
+//            {
+//                System.out.print("All Horses have fallen!");
+//                finished = true;
+//            }
+            boolean allFall= true;
+
+            for(int i = 0; i < horseArray.size(); i++)
+            {
+                if (!horseArray.get(i).hasFallen()){
+                    allFall = false;
+                }
+            }
+
+            if (allFall) {
+                System.out.print("All Horses have fallen!");
+                finished = true;
+            }
         }
     }
     
@@ -164,14 +201,19 @@ public class Race
         multiplePrint('=',raceLength+3); //top edge of track
         System.out.println();
         
-        printLane(lane1Horse);
-        System.out.println();
-        
-        printLane(lane2Horse);
-        System.out.println();
-        
-        printLane(lane3Horse);
-        System.out.println();
+//        printLane(lane1Horse);
+//        System.out.println();
+//
+//        printLane(lane2Horse);
+//        System.out.println();
+//
+//        printLane(lane3Horse);
+//        System.out.println();
+        for(int i = 0; i < horseArray.size();  i++){
+            printLane(horseArray.get(i));
+            System.out.println();
+        }
+
         
         multiplePrint('=',raceLength+3); //bottom edge of track
         System.out.println();    
