@@ -1,16 +1,21 @@
 import javax.swing.*;
 import java.awt.*;
+import java.io.UnsupportedEncodingException;
 import java.util.Scanner;
 
 
 public class GUI extends JFrame{
 
     private static Race mainRace;
+    private static JFrame mainFrame;
 
     public GUI() {
-        JFrame mainFrame = new JFrame("Horse Race Simulator");
+
+        //Screen Initialisation////////////////////////////////////////////////////////////////
+
+        mainFrame = new JFrame("Horse Race Simulator");
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        mainFrame.setLayout(new BorderLayout());
+        mainFrame.setLayout(new CardLayout());
         mainFrame.setSize(1200, 600);
 
         JPanel TitleScreen = new JPanel(new GridBagLayout());
@@ -19,8 +24,12 @@ public class GUI extends JFrame{
         mainFrame.add(TitleScreen);
 
         JPanel HomeScreen = new JPanel(new GridBagLayout());
-        HomeScreen.setVisible(false);
+//        HomeScreen.setVisible(false);
         HomeScreen.setBackground(Color.decode("#392F5A"));
+
+        JPanel NewRaceScreen = new JPanel(new GridBagLayout());
+//        NewRaceScreen.setVisible(false);
+        NewRaceScreen.setBackground(Color.decode("#392F5A"));
 
         //Title Screen////////////////////////////////////////////////////////////////////
 
@@ -64,30 +73,67 @@ public class GUI extends JFrame{
 
         mainFrame.setVisible(true);
 
-        mainFrame.add(HomeScreen);
+
+//        mainFrame.add(NewRaceScreen);
 
         //Home Screen/////////////////////////////////////////////////////////////////////////////////////////
 
-        JButton RaceButton = new JButton("Create Race!");
-        RaceButton.addActionListener(e -> NewRace());
-        RaceButton.setFocusPainted(false);
-        RaceButton.setBackground(Color.decode("#F4D06F"));
-        RaceButton.setForeground(Color.decode("#23231A"));
+            JButton RaceButton = new JButton("Create Race!");
+            RaceButton.addActionListener(e -> switchScreens(HomeScreen, NewRaceScreen));
+            RaceButton.addActionListener(e -> NewRace());
+            RaceButton.setFocusPainted(false);
+            RaceButton.setBackground(Color.decode("#F4D06F"));
+            RaceButton.setForeground(Color.decode("#23231A"));
 
-        JButton TrackButton = new JButton("Customize Track!");
-        TrackButton.setFocusPainted(false);
-        TrackButton.setBackground(Color.decode("#F4D06F"));
-        TrackButton.setForeground(Color.decode("#23231A"));
+            JButton TrackButton = new JButton("Customize Track!");
+            TrackButton.setFocusPainted(false);
+            TrackButton.setBackground(Color.decode("#F4D06F"));
+            TrackButton.setForeground(Color.decode("#23231A"));
 
-        JButton HorsesButton = new JButton("Customize Horses!");
-        HorsesButton.setFocusPainted(false);
-        HorsesButton.setBackground(Color.decode("#F4D06F"));
-        HorsesButton.setForeground(Color.decode("#23231A"));
+            JButton HorsesButton = new JButton("Customize Horses!");
+            HorsesButton.setFocusPainted(false);
+            HorsesButton.setBackground(Color.decode("#F4D06F"));
+            HorsesButton.setForeground(Color.decode("#23231A"));
 
-        JButton StatisticsButton = new JButton("Statistics and Analytics");
-        StatisticsButton.setFocusPainted(false);
-        StatisticsButton.setBackground(Color.decode("#F4D06F"));
-        StatisticsButton.setForeground(Color.decode("#23231A"));
+            JButton StatisticsButton = new JButton("Statistics and Analytics");
+            StatisticsButton.setFocusPainted(false);
+            StatisticsButton.setBackground(Color.decode("#F4D06F"));
+            StatisticsButton.setForeground(Color.decode("#23231A"));
+
+            titleConstraints.insets = new Insets(2,2,2,2);
+            titleConstraints.gridx = 0;
+            titleConstraints.gridy = 0;
+            titleConstraints.ipadx = 15;
+            titleConstraints.ipady = 10;
+
+            HomeScreen.add(RaceButton, titleConstraints);
+
+            titleConstraints.gridx = 1;
+
+            HomeScreen.add(TrackButton, titleConstraints);
+
+            titleConstraints.gridx = 2;
+
+            HomeScreen.add(HorsesButton, titleConstraints);
+
+            titleConstraints.gridx = 3;
+
+            HomeScreen.add(StatisticsButton, titleConstraints);
+
+
+        //New Race Screen//////////////////////////////////////////////////////////////////////
+
+        JButton HorseButton = new JButton("Add Horse!");
+        HorseButton.addActionListener(e -> addHorse());
+        HorseButton.setFocusPainted(false);
+        HorseButton.setBackground(Color.decode("#F4D06F"));
+        HorseButton.setForeground(Color.decode("#23231A"));
+
+        JButton StartRaceButton = new JButton("Start Race!");
+        StartRaceButton.addActionListener(e -> StartRace());
+        StartRaceButton.setFocusPainted(false);
+        StartRaceButton.setBackground(Color.decode("#F4D06F"));
+        StartRaceButton.setForeground(Color.decode("#23231A"));
 
         titleConstraints.insets = new Insets(2,2,2,2);
         titleConstraints.gridx = 0;
@@ -95,19 +141,13 @@ public class GUI extends JFrame{
         titleConstraints.ipadx = 15;
         titleConstraints.ipady = 10;
 
-        HomeScreen.add(RaceButton, titleConstraints);
+        NewRaceScreen.add(HorseButton, titleConstraints);
 
-        titleConstraints.gridx = 1;
+        titleConstraints.gridy = 1;
 
-        HomeScreen.add(TrackButton, titleConstraints);
+        NewRaceScreen.add(StartRaceButton, titleConstraints);
 
-        titleConstraints.gridx = 2;
 
-        HomeScreen.add(HorsesButton, titleConstraints);
-
-        titleConstraints.gridx = 3;
-
-        HomeScreen.add(StatisticsButton, titleConstraints);
     }
 
 
@@ -116,8 +156,15 @@ public class GUI extends JFrame{
     }
 
     public void switchScreens(JPanel ScreenOff,  JPanel ScreenOn){
-        ScreenOff.setVisible(false);
-        ScreenOn.setVisible(true);
+
+
+        mainFrame.remove(ScreenOff);
+        mainFrame.repaint();
+        mainFrame.revalidate();
+
+        mainFrame.add(ScreenOn);
+        mainFrame.repaint();
+        mainFrame.revalidate();
 
         return;
     }
@@ -131,6 +178,32 @@ public class GUI extends JFrame{
         System.out.println("How long is the race?(m): ");
         distance = SCANNER.nextInt();
         mainRace = new Race(lanes, distance);
+    }
+
+    public void addHorse(){
+        Scanner SCANNER = new Scanner(System.in);
+        char newSymbol;
+        String newName;
+        double newConfidence;
+        System.out.println("What Symbol do you want to represent your horse?(Single Character): ");
+        newSymbol = SCANNER.nextLine().charAt(0);
+        System.out.println("What Name do you want to give your horse?: ");
+        newName = SCANNER.nextLine();
+        System.out.println("How confident is your horse?(between 0-1): ");
+        newConfidence = SCANNER.nextDouble();
+        Horse newHorse = new Horse(newSymbol,newName, newConfidence);
+        int laneNumber;
+        System.out.println("What lane number do you want to put your horse in?: ");
+        laneNumber = SCANNER.nextInt();
+        mainRace.addHorse(newHorse,laneNumber);
+    }
+
+    public void StartRace(){
+        try {
+            mainRace.startRace();
+        } catch (UnsupportedEncodingException e) {
+
+        }
     }
 
 }
