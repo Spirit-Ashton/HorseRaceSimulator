@@ -32,6 +32,9 @@ public class Horse
     public void fall()
     {
         this.fallen  = true;
+        if( this.confidence >= 0.2){
+            this.confidence = this.confidence - 0.1;
+        }
 
         return;
     }
