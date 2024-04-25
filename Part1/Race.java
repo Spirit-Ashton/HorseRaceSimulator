@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
+import java.util.HashMap;
 import java.lang.Math;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
@@ -15,10 +16,13 @@ import java.io.UnsupportedEncodingException;
 public class Race
 {
     private int raceLength;
-    private ArrayList<Horse> horseArray;
-    private Horse lane1Horse;
-    private Horse lane2Horse;
-    private Horse lane3Horse;
+    private int lanes;
+    private HashMap<Integer, Horse> horseMap;
+
+//    private ArrayList<HashMap> horseArray;
+//    private Horse lane1Horse;
+//    private Horse lane2Horse;
+//    private Horse lane3Horse;
 
     /**
      * Constructor for objects of class Race
@@ -26,14 +30,16 @@ public class Race
      * 
      * @param distance the length of the racetrack (in metres/yards...)
      */
-    public Race( int distance)
+    public Race( int noLanes, int distance)
     {
         // initialise instance variables
         raceLength = distance;
-        horseArray = new ArrayList<>();
-        lane1Horse = null;
-        lane2Horse = null;
-        lane3Horse = null;
+        lanes = noLanes;
+        horseMap = new HashMap<>();
+//        horseArray = new ArrayList<>();
+//        lane1Horse = null;
+//        lane2Horse = null;
+//        lane3Horse = null;
     }
     
     /**
@@ -44,23 +50,16 @@ public class Race
      */
     public void addHorse(Horse theHorse, int laneNumber)
     {
-//        if (laneNumber == 1)
-//        {
-//            lane1Horse = theHorse;
-//        }
-//        else if (laneNumber == 2)
-//        {
-//            lane2Horse = theHorse;
-//        }
-//        else if (laneNumber == 3)
-//        {
-//            lane3Horse = theHorse;
-//        }
-//        else
-//        {
-//            System.out.println("Cannot add horse to lane " + laneNumber + " because there is no such lane");
-//        }
-        horseArray.add(theHorse);
+        if(laneNumber <= 0 || laneNumber > lanes){
+            System.out.println("Cannot add horse to lane " + laneNumber + " because there is no such lane");
+        } else {
+            if (horseMap.get(laneNumber) == null) {
+                horseMap.put(laneNumber, theHorse);
+            } else {
+                System.out.println("Cannot add horse to lane " + laneNumber + " because it is already occupied.");
+            }
+        }
+//        horseArray.add(theHorse);
     }
     
     /**
@@ -79,20 +78,26 @@ public class Race
 //        lane1Horse.goBackToStart();
 //        lane2Horse.goBackToStart();
 //        lane3Horse.goBackToStart();
-        for(int i = 0; i < horseArray.size(); i++)
-        {
-            horseArray.get(i).goBackToStart();
+//        for(int i = 0; i < horseArray.size(); i++)
+//        {
+//            horseArray.get(i).goBackToStart();
+//        }
+        for (Horse H : horseMap.values()){
+            H.goBackToStart();
         }
-                      
+
         while (!finished)
         {
             //move each horse
 //            moveHorse(lane1Horse);
 //            moveHorse(lane2Horse);
 //            moveHorse(lane3Horse);
-            for(int i = 0; i < horseArray.size(); i++)
-            {
-                moveHorse(horseArray.get(i));
+//            for(int i = 0; i < horseArray.size(); i++)
+//            {
+//                moveHorse(horseArray.get(i));
+//            }
+            for(Horse H : horseMap.values()){
+                moveHorse(H);
             }
                         
             //print the race positions
@@ -103,9 +108,14 @@ public class Race
 //            {
 //                finished = true;
 //            }
-            for(int i = 0; i < horseArray.size(); i++)
-            {
-                if (raceWonBy(horseArray.get(i))){
+//            for(int i = 0; i < horseArray.size(); i++)
+//            {
+//                if (raceWonBy(horseArray.get(i))){
+//                    finished = true;
+//                }
+//            }
+            for(Horse H : horseMap.values()){
+                if(raceWonBy(H)){
                     finished = true;
                 }
             }
@@ -121,9 +131,14 @@ public class Race
 //            }
             boolean allFall= true;
 
-            for(int i = 0; i < horseArray.size(); i++)
-            {
-                if (!horseArray.get(i).hasFallen()){
+//            for(int i = 0; i < horseArray.size(); i++)
+//            {
+//                if (!horseArray.get(i).hasFallen()){
+//                    allFall = false;
+//                }
+//            }
+            for (Horse H : horseMap.values()){
+                if(!H.hasFallen()){
                     allFall = false;
                 }
             }
@@ -209,9 +224,18 @@ public class Race
 //
 //        printLane(lane3Horse);
 //        System.out.println();
-        for(int i = 0; i < horseArray.size();  i++){
-            printLane(horseArray.get(i));
-            System.out.println();
+//        for(int i = 0; i < horseArray.size();  i++){
+//            printLane(horseArray.get(i));
+//            System.out.println();
+//        }
+        for(int i = 1; i < lanes + 1; i++){
+            if(horseMap.get(i) != null){
+                printLane(horseMap.get(i));
+                System.out.println();
+            } else {
+                printLane();
+                System.out.println();
+            }
         }
 
         
@@ -260,8 +284,28 @@ public class Race
         System.out.print(")");
 
     }
-        
-    
+
+    /**
+        *prints an empty lane
+        *
+     */
+    private void printLane() throws UnsupportedEncodingException
+    {
+        PrintStream out = new PrintStream(System.out, true, "UTF-8");
+
+        //print a | for the beginning of the lane
+        System.out.print('|');
+
+        //print the spaces before the horse
+        multiplePrint(' ',raceLength + 1);
+
+
+        //print the | for the end of the track
+        System.out.print('|');
+        System.out.print(" (EMPTY LANE)" );
+
+    }
+
     /***
      * print a character a given number of times.
      * e.g. printmany('x',5) will print: xxxxx
