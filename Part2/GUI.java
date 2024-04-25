@@ -11,7 +11,8 @@ public class GUI extends JFrame{
 
     private static Race mainRace;
     private static JFrame mainFrame;
-
+    private static JPanel HomeScreen;
+    private static JPanel CurrentScreen;
     private static ArrayList<Horse> AllHorses = new ArrayList<>();
 
     public GUI() {
@@ -27,8 +28,9 @@ public class GUI extends JFrame{
         TitleScreen.setBackground(Color.decode("#392F5A"));
 
         mainFrame.add(TitleScreen);
+        CurrentScreen = TitleScreen;
 
-        JPanel HomeScreen = new JPanel(new GridBagLayout());
+        HomeScreen = new JPanel(new GridBagLayout());
         HomeScreen.setBackground(Color.decode("#392F5A"));
 
         JPanel NewRaceScreen = new JPanel(new GridBagLayout());
@@ -84,13 +86,13 @@ public class GUI extends JFrame{
 
         //Home Screen/////////////////////////////////////////////////////////////////////////////////////////
 
-            JButton RaceButton = new JButton("Create Race!");
+            JButton RaceButton = new JButton("Create RaceTrack!");
             RaceButton.addActionListener(e -> switchScreens(HomeScreen, NewRaceScreen));
             RaceButton.setFocusPainted(false);
             RaceButton.setBackground(Color.decode("#F4D06F"));
             RaceButton.setForeground(Color.decode("#23231A"));
 
-            JButton TrackButton = new JButton("Customize Track!");
+            JButton TrackButton = new JButton("Start Race!");
             TrackButton.setFocusPainted(false);
             TrackButton.setBackground(Color.decode("#F4D06F"));
             TrackButton.setForeground(Color.decode("#23231A"));
@@ -312,12 +314,24 @@ public class GUI extends JFrame{
 
     public void switchScreens(JPanel ScreenOff,  JPanel ScreenOn){
 
-
         mainFrame.remove(ScreenOff);
         mainFrame.repaint();
         mainFrame.revalidate();
 
         mainFrame.add(ScreenOn);
+        mainFrame.repaint();
+        mainFrame.revalidate();
+
+        CurrentScreen = ScreenOn;
+        return;
+    }
+
+    public void HomeScreen(){
+        mainFrame.remove(CurrentScreen);
+        mainFrame.repaint();
+        mainFrame.revalidate();
+
+        mainFrame.add(HomeScreen);
         mainFrame.repaint();
         mainFrame.revalidate();
 
@@ -373,6 +387,7 @@ public class GUI extends JFrame{
 
         if(Accepted == true){
             NewRace(TextFields[0].getText(), TextFields[1].getText());
+            HomeScreen();
         }
     }
 
@@ -389,6 +404,7 @@ public class GUI extends JFrame{
 
         if(Accepted == true){
             AllHorses.add( new Horse('*', HorseName.getText(), Double.valueOf(HorseConfidence.getText())));
+            HomeScreen();
         }
     }
 
