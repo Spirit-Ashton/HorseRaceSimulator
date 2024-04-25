@@ -153,8 +153,12 @@ public class Race
     {
         PrintStream out = new PrintStream(System.out, true, "UTF-8");
 
-        System.out.print('\u000C');  //clear the terminal window
-        
+//        System.out.print('\u000C');  //clear the terminal window
+
+
+        System.out.print("\033[H\033[2J"); //clear the terminal windowj
+        System.out.flush();
+
         multiplePrint('=',raceLength+3); //top edge of track
         System.out.println();
         

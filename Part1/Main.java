@@ -12,6 +12,7 @@ public class Main {
         newRace.addHorse(new Horse( '\u265B' ,  "BLISS"  ,0.5) , 3);
 
         newRace.startRace();
+
     }
 
 }
