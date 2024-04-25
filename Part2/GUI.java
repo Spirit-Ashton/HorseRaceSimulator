@@ -1,9 +1,11 @@
 import javax.swing.*;
 import java.awt.*;
+import java.util.Scanner;
 
 
 public class GUI extends JFrame{
 
+    private static Race mainRace;
 
     public GUI() {
         JFrame mainFrame = new JFrame("Horse Race Simulator");
@@ -66,7 +68,13 @@ public class GUI extends JFrame{
 
         //Home Screen/////////////////////////////////////////////////////////////////////////////////////////
 
-        JButton TrackButton = new JButton("Create Track!");
+        JButton RaceButton = new JButton("Create Race!");
+        RaceButton.addActionListener(e -> NewRace());
+        RaceButton.setFocusPainted(false);
+        RaceButton.setBackground(Color.decode("#F4D06F"));
+        RaceButton.setForeground(Color.decode("#23231A"));
+
+        JButton TrackButton = new JButton("Customize Track!");
         TrackButton.setFocusPainted(false);
         TrackButton.setBackground(Color.decode("#F4D06F"));
         TrackButton.setForeground(Color.decode("#23231A"));
@@ -87,13 +95,17 @@ public class GUI extends JFrame{
         titleConstraints.ipadx = 15;
         titleConstraints.ipady = 10;
 
-        HomeScreen.add(TrackButton, titleConstraints);
+        HomeScreen.add(RaceButton, titleConstraints);
 
         titleConstraints.gridx = 1;
 
-        HomeScreen.add(HorsesButton, titleConstraints);
+        HomeScreen.add(TrackButton, titleConstraints);
 
         titleConstraints.gridx = 2;
+
+        HomeScreen.add(HorsesButton, titleConstraints);
+
+        titleConstraints.gridx = 3;
 
         HomeScreen.add(StatisticsButton, titleConstraints);
     }
@@ -110,5 +122,15 @@ public class GUI extends JFrame{
         return;
     }
 
+    public void NewRace(){
+        int lanes;
+        int distance;
+        Scanner SCANNER = new Scanner(System.in);
+        System.out.println("How Many Lanes Would you like to have?: ");
+        lanes = SCANNER.nextInt();
+        System.out.println("How long is the race?(m): ");
+        distance = SCANNER.nextInt();
+        mainRace = new Race(lanes, distance);
+    }
 
 }
