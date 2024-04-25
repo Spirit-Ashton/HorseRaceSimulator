@@ -80,7 +80,7 @@ public class GUI extends JFrame{
 
             JButton RaceButton = new JButton("Create Race!");
             RaceButton.addActionListener(e -> switchScreens(HomeScreen, NewRaceScreen));
-            RaceButton.addActionListener(e -> NewRace());
+//            RaceButton.addActionListener(e -> NewRace());
             RaceButton.setFocusPainted(false);
             RaceButton.setBackground(Color.decode("#F4D06F"));
             RaceButton.setForeground(Color.decode("#23231A"));
@@ -123,29 +123,72 @@ public class GUI extends JFrame{
 
         //New Race Screen//////////////////////////////////////////////////////////////////////
 
-        JButton HorseButton = new JButton("Add Horse!");
-        HorseButton.addActionListener(e -> addHorse());
-        HorseButton.setFocusPainted(false);
-        HorseButton.setBackground(Color.decode("#F4D06F"));
-        HorseButton.setForeground(Color.decode("#23231A"));
+            JLabel LaneLabel = new JLabel("How Many Lanes are in your track?");
+            LaneLabel.setForeground(Color.decode("#FFF8F0"));
 
-        JButton StartRaceButton = new JButton("Start Race!");
-        StartRaceButton.addActionListener(e -> StartRace());
-        StartRaceButton.setFocusPainted(false);
-        StartRaceButton.setBackground(Color.decode("#F4D06F"));
-        StartRaceButton.setForeground(Color.decode("#23231A"));
+            JTextField LaneNumber = new JTextField(10);
 
-        titleConstraints.insets = new Insets(2,2,2,2);
-        titleConstraints.gridx = 0;
-        titleConstraints.gridy = 0;
-        titleConstraints.ipadx = 15;
-        titleConstraints.ipady = 10;
+            JLabel DistanceLabel = new JLabel("How long is your track in metres?");
+            DistanceLabel.setForeground(Color.decode("#FFF8F0"));
 
-        NewRaceScreen.add(HorseButton, titleConstraints);
+            JButton RaceSubmitButton = new JButton("Submit!");
+            RaceSubmitButton.setFocusPainted(false);
+            RaceSubmitButton.setBackground(Color.decode("#F4D06F"));
+            RaceSubmitButton.setForeground(Color.decode("#23231A"));
 
-        titleConstraints.gridy = 1;
+            JTextField RaceDistance = new JTextField(10);
 
-        NewRaceScreen.add(StartRaceButton, titleConstraints);
+            titleConstraints.insets = new Insets(2,2,2,2);
+            titleConstraints.gridx = 0;
+            titleConstraints.gridy = 0;
+            titleConstraints.ipadx = 15;
+            titleConstraints.ipady = 10;
+            titleConstraints.fill = GridBagConstraints.NONE;
+
+            NewRaceScreen.add(LaneLabel, titleConstraints);
+
+            titleConstraints.gridy = 1;
+            titleConstraints.insets = new Insets(2,2,50,2);
+
+            NewRaceScreen.add(LaneNumber, titleConstraints);
+
+            titleConstraints.gridy = 2;
+            titleConstraints.insets = new Insets(2,2,2,2);
+
+            NewRaceScreen.add(DistanceLabel, titleConstraints);
+
+            titleConstraints.gridy = 3;
+
+            NewRaceScreen.add(RaceDistance, titleConstraints);
+
+            titleConstraints.gridy = 4;
+            titleConstraints.insets = new Insets(20,2,2,2);
+
+            NewRaceScreen.add(RaceSubmitButton, titleConstraints);
+
+//        JButton HorseButton = new JButton("Add Horse!");
+//        HorseButton.addActionListener(e -> addHorse());
+//        HorseButton.setFocusPainted(false);
+//        HorseButton.setBackground(Color.decode("#F4D06F"));
+//        HorseButton.setForeground(Color.decode("#23231A"));
+//
+//        JButton StartRaceButton = new JButton("Start Race!");
+//        StartRaceButton.addActionListener(e -> StartRace());
+//        StartRaceButton.setFocusPainted(false);
+//        StartRaceButton.setBackground(Color.decode("#F4D06F"));
+//        StartRaceButton.setForeground(Color.decode("#23231A"));
+//
+//        titleConstraints.insets = new Insets(2,2,2,2);
+//        titleConstraints.gridx = 0;
+//        titleConstraints.gridy = 0;
+//        titleConstraints.ipadx = 15;
+//        titleConstraints.ipady = 10;
+//
+//        NewRaceScreen.add(HorseButton, titleConstraints);
+//
+//        titleConstraints.gridy = 1;
+//
+//        NewRaceScreen.add(StartRaceButton, titleConstraints);
 
 
     }
