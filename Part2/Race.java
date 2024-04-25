@@ -19,10 +19,6 @@ public class Race
     private int lanes;
     private HashMap<Integer, Horse> horseMap;
 
-//    private ArrayList<HashMap> horseArray;
-//    private Horse lane1Horse;
-//    private Horse lane2Horse;
-//    private Horse lane3Horse;
 
     /**
      * Constructor for objects of class Race
@@ -36,10 +32,6 @@ public class Race
         raceLength = distance;
         lanes = noLanes;
         horseMap = new HashMap<>();
-//        horseArray = new ArrayList<>();
-//        lane1Horse = null;
-//        lane2Horse = null;
-//        lane3Horse = null;
     }
     
     /**
@@ -323,4 +315,14 @@ public class Race
             i = i + 1;
         }
     }
+    
+
+    public int getLanes(){
+        return this.lanes;
+    }
+
+    public int getRaceLength(){
+        return this.raceLength;
+    }
+
 }
