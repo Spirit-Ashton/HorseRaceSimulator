@@ -1,4 +1,5 @@
 import javax.swing.*;
+import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
@@ -101,15 +102,15 @@ public class GUI extends JFrame{
             StartButton.addActionListener(e -> switchScreens(HomeScreen, ChooseHorsesScreen));
             StartButton.addActionListener(e-> {
 
-                JPanel CHButtonPanel = new JPanel(new FlowLayout());
-                CHButtonPanel.setBackground(new Color(0,0,0,0));
-//                CHButtonPanel.setName("Button Panel");
+                JPanel CHMainPanel = new JPanel(new FlowLayout());
+                CHMainPanel.setBackground(new Color(0,0,0,0));
+//                CHMainPanel.setName("Button Panel");
 
 
                 HashMap<Horse, JLabel> HorseLabelMap = new HashMap<>();
 
                 for (Horse H : AllHorses){
-                    JLabel HName = new JLabel(H.getName());
+                    JLabel HName = new JLabel(H.getName(), SwingConstants.CENTER);
                     HName.setForeground(Color.decode("#FFF8F0"));
 
                     HorseLabelMap.put(H, HName);
@@ -122,15 +123,42 @@ public class GUI extends JFrame{
                 gridConstraints.ipadx = 15;
                 gridConstraints.ipady = 10;
 
-                ChooseHorsesScreen.add(CHButtonPanel, gridConstraints);
+                ChooseHorsesScreen.add(CHMainPanel, gridConstraints);
 
                 if(HorseLabelMap.isEmpty()){
                     JLabel noHorsesLabel = new JLabel("No Horses to Race :(");
                     noHorsesLabel.setForeground(Color.decode("#FFF8F0"));
-                    CHButtonPanel.add(noHorsesLabel);
+                    CHMainPanel.add(noHorsesLabel);
                 } else {
                     for (JLabel J : HorseLabelMap.values()) {
-                        CHButtonPanel.add(J);
+                        JPanel CHBlockPanel = new JPanel(new GridBagLayout());
+                        CHBlockPanel.setBackground(new Color(0,0,0,0));
+//                        CHBlockPanel.setBorder(new LineBorder(Color.decode("#23231A"), 2));
+
+                        JButton chooseHorseButton = new JButton("Select!");
+                        chooseHorseButton.setFocusPainted(false);
+                        chooseHorseButton.setBackground(Color.decode("#F4D06F"));
+                        chooseHorseButton.setForeground(Color.decode("#23231A"));
+
+                        gridConstraints.insets = new Insets(2,2,20,2);
+                        gridConstraints.gridx = 0;
+                        gridConstraints.gridy = 0;
+                        gridConstraints.ipadx = 15;
+                        gridConstraints.ipady = 10;
+
+                        CHBlockPanel.add(J, gridConstraints);
+
+                        gridConstraints.gridy = 1;
+
+                        CHBlockPanel.add(chooseHorseButton, gridConstraints);
+
+                        gridConstraints.insets = new Insets(2,2,30,2);
+                        gridConstraints.gridx = 0;
+                        gridConstraints.gridy = 1;
+                        gridConstraints.ipadx = 15;
+                        gridConstraints.ipady = 10;
+
+                        CHMainPanel.add(CHBlockPanel);
                     }
                 }
 
@@ -329,8 +357,8 @@ public class GUI extends JFrame{
         JLabel HorseName = new JLabel("Horse Name");
         HorseName.setForeground(Color.decode("#FFF8F0"));
 
-//        JPanel CHButtonPanel = new JPanel(new FlowLayout());
-//        CHButtonPanel.setBackground(new Color(0,0,0,0));
+//        JPanel CHMainPanel = new JPanel(new FlowLayout());
+//        CHMainPanel.setBackground(new Color(0,0,0,0));
 
         HashMap<Horse, JLabel> HorseLabelMap = new HashMap<>();
 
@@ -368,10 +396,10 @@ public class GUI extends JFrame{
 //            gridConstraints.gridx = gridConstraints.gridx + 1;
 //        }
 
-//        ChooseHorsesScreen.add(CHButtonPanel, gridConstraints);
+//        ChooseHorsesScreen.add(CHMainPanel, gridConstraints);
 
 //        for(JLabel J :HorseLabelMap.values()){
-//            CHButtonPanel.add(J);
+//            CHMainPanel.add(J);
 //        }
 
         gridConstraints.gridx = 0;
@@ -490,10 +518,10 @@ public class GUI extends JFrame{
         }
 
         if(Accepted == true){
-            NewRace(TextFields[0].getText(), TextFields[1].getText());
             for(JTextField J : TextFields){
                 J.setText("");
             }
+            NewRace(TextFields[0].getText(), TextFields[1].getText());
             HomeScreen();
         }
     }
@@ -511,6 +539,8 @@ public class GUI extends JFrame{
 
         if(Accepted == true){
             AllHorses.add( new Horse('*', HorseName.getText(), Double.valueOf(HorseConfidence.getText())));
+            HorseName.setText("");
+            HorseConfidence.setText("");
             HomeScreen();
         }
     }
