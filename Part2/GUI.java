@@ -48,6 +48,8 @@ public class GUI extends JFrame{
         JPanel ChooseHorsesScreen = new JPanel(new GridBagLayout());
         ChooseHorsesScreen.setBackground(Color.decode("#392F5A"));
 
+
+
         //Title Screen////////////////////////////////////////////////////////////////////
 
             JPanel TitlePanel = new JPanel(new BorderLayout());
@@ -104,7 +106,7 @@ public class GUI extends JFrame{
                 CHMainPanel.setName("Delete");
 
                 JButton StartRaceButton = new JButton("Start Race!");
-                StartRaceButton.addActionListener(E -> StartRace());
+                StartRaceButton.addActionListener(E -> StartRaceGUI());
                 StartRaceButton.setBackground(Color.decode("#261D03"));
                 StartRaceButton.setForeground(Color.decode("#FFC685"));
                 StartRaceButton.setFocusPainted(false);
@@ -168,7 +170,8 @@ public class GUI extends JFrame{
                                     }
                                 }
                                 int laneValue = addHorseScreen(thisHorse);
-
+                                ChooseHorsesScreen.repaint();
+                                ChooseHorsesScreen.revalidate();
                                 if (laneValue != -1){
                                     chooseHorseButton.setText("Lane: " + laneValue);
                                     chooseHorseButton.setBackground(Color.decode("#261D03"));
@@ -456,32 +459,7 @@ public class GUI extends JFrame{
 
         ChooseHorsesScreen.add(chooseHorsesBackButton, gridConstraints);
 
-//        ChooseHorsesScreen.add(HorseName, gridConstraints);
-
-
-//        JButton HorseButton = new JButton("Add Horse!");
-//        HorseButton.addActionListener(e -> addHorse());
-//        HorseButton.setFocusPainted(false);
-//        HorseButton.setBackground(Color.decode("#F4D06F"));
-//        HorseButton.setForeground(Color.decode("#23231A"));
-//
-//        JButton StartRaceButton = new JButton("Start Race!");
-//        StartRaceButton.addActionListener(e -> StartRace());
-//        StartRaceButton.setFocusPainted(false);
-//        StartRaceButton.setBackground(Color.decode("#F4D06F"));
-//        StartRaceButton.setForeground(Color.decode("#23231A"));
-//
-//        gridConstraints.insets = new Insets(2,2,2,2);
-//        gridConstraints.gridx = 0;
-//        gridConstraints.gridy = 0;
-//        gridConstraints.ipadx = 15;
-//        gridConstraints.ipady = 10;
-//
-//        NewRaceScreen.add(HorseButton, gridConstraints);
-//
-//        gridConstraints.gridy = 1;
-//
-//        NewRaceScreen.add(StartRaceButton, gridConstraints);
+    //Race Screen////////////////////////////////////////////////////////////////////////////////////////////
 
 
     }
@@ -715,6 +693,24 @@ public class GUI extends JFrame{
 
     public void resetHorses(){
         mainRace = new Race(mainRace.getLanes(), mainRace.getRaceLength());
+
+        return;
+    }
+
+    public void StartRaceGUI(){
+        JDialog RaceDialog = new JDialog(mainFrame, "Race!", Dialog.ModalityType.DOCUMENT_MODAL);
+        RaceDialog.setLayout(new CardLayout());
+        RaceDialog.setSize(mainFrame.getSize());
+        RaceDialog.setLocationRelativeTo(mainFrame);
+
+        JPanel RaceScreen = new JPanel(new GridBagLayout());
+        RaceScreen.setBackground(Color.decode("#392F5A"));
+
+        RaceDialog.add(RaceScreen);
+
+        GridBagConstraints gridConstraints = new GridBagConstraints();
+
+        RaceDialog.setVisible(true);
 
         return;
     }
