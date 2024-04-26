@@ -16,3 +16,13 @@ In saying this, to be able to view the Unicode you have to initiate your shell i
 Have fun racing!
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Part 2: The GUI Version is a temporary beta and thus all features are not implemented.
+
+Features present consist of, track customisation, statistics and analytics, file IO storage, secure race set-up system.
+
+Horses are stored in the Horse.txt file DO NOT manually change values unless deleting entire line.
+
+Have fun racing!
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////
