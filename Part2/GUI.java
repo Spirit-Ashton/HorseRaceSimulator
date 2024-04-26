@@ -3,7 +3,7 @@ import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.CubicCurve2D;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
@@ -279,46 +279,53 @@ public class GUI extends JFrame implements Runnable{
             JButton StatisticsButton = createButton("Statistics and Analytics");
             StatisticsButton.addActionListener(e -> {
 
-                Horse[] HorseArray = new Horse[AllHorses.size()];
+                if(!AllHorses.isEmpty()) {
 
-                HorseArray = AllHorses.toArray(HorseArray);
+                    Horse[] HorseArray = new Horse[AllHorses.size()];
 
-                JList<Horse> HorseList = new JList<>(HorseArray);
+                    HorseArray = AllHorses.toArray(HorseArray);
 
-                String[] items = {"Apple", "Banana", "Orange", "Grapes", "Pineapple"};
+                    JList<Horse> HorseList = new JList<>(HorseArray);
 
-                String[] HorseNameArray = new String[AllHorses.size()];
+                    String[] items = {"Apple", "Banana", "Orange", "Grapes", "Pineapple"};
 
-                int Index = 0;
+                    String[] HorseNameArray = new String[AllHorses.size()];
 
-                for (Horse H : AllHorses){
-                    HorseNameArray[Index] = H.getName();
-                    Index ++;
+                    int Index = 0;
+
+                    for (Horse H : AllHorses) {
+                        HorseNameArray[Index] = H.getName();
+                        Index++;
+                    }
+
+                    JList<Horse> StringList = new JList<>(HorseArray);
+                    StringList.setPreferredSize(new Dimension(800, 200));
+                    StringList.setBackground(Color.decode("#FFF8F0"));
+                    StringList.setForeground(Color.decode("#23231A"));
+                    StringList.setBorder(new LineBorder(Color.BLACK, 0));
+                    StringList.setFont(new Font("Dialog", Font.BOLD, 13));
+                    StringList.setVisibleRowCount(5);
+                    StringList.setFixedCellHeight(25);
+
+                    JScrollPane ScrollPane = new JScrollPane(StringList);
+                    ScrollPane.setName("Delete");
+                    ScrollPane.setBackground(Color.decode("#23231A"));
+                    ScrollPane.setForeground(Color.decode("#F4D67B"));
+                    ScrollPane.setBorder(new LineBorder(Color.BLACK, 0));
+
+
+                    gridConstraints.insets = new Insets(50, 2, 40, 2);
+                    gridConstraints.gridx = 0;
+                    gridConstraints.gridy = 1;
+                    gridConstraints.ipadx = 0;
+                    gridConstraints.ipady = 0;
+
+                    StatsScreen.add(ScrollPane, gridConstraints);
+                } else{
+                    JLabel NoDataLabel = new JLabel("There is No Horse Data to be shown!");
+                    NoDataLabel.setForeground(Color.decode("#FFF8F0"));
+                    NoDataLabel.setFont(new Font("Dialog", Font.BOLD, 16));
                 }
-
-                JList<String> StringList = new JList<>(items);
-                StringList.setPreferredSize(new Dimension(800, 200));
-                StringList.setBackground(Color.decode("#FFF8F0"));
-                StringList.setForeground(Color.decode("#23231A"));
-                StringList.setBorder(new LineBorder(Color.BLACK, 0));
-                StringList.setFont(new Font("Dialog", Font.BOLD, 13));
-                StringList.setVisibleRowCount(5);
-                StringList.setFixedCellHeight(25);
-
-                JScrollPane ScrollPane = new JScrollPane(StringList);
-                ScrollPane.setName("Delete");
-                ScrollPane.setBackground(Color.decode("#23231A"));
-                ScrollPane.setForeground(Color.decode("#F4D67B"));
-                ScrollPane.setBorder(new LineBorder(Color.BLACK, 0));
-
-
-                gridConstraints.insets = new Insets(50,2,40,2);
-                gridConstraints.gridx = 0;
-                gridConstraints.gridy = 1;
-                gridConstraints.ipadx = 0;
-                gridConstraints.ipady = 0;
-
-                StatsScreen.add(ScrollPane,gridConstraints);
 
                 switchScreens(HomeScreen, StatsScreen);
             });
@@ -1096,6 +1103,23 @@ public class GUI extends JFrame implements Runnable{
         } catch (UnsupportedEncodingException e) {
 
         }
+    }
+
+
+    private static void SaveHorses() throws IOException {
+        File HorseFile  = new File("Horses.txt");
+        HorseFile.createNewFile();
+        FileWriter FileWriter = new FileWriter("Horses.txt", false);
+        BufferedWriter BufferedWriter = new BufferedWriter(FileWriter);
+
+        for (Horse H: AllHorses){
+            BufferedWriter.write(H.storeString());
+            BufferedWriter.newLine();
+        }
+
+        BufferedWriter.close();
+        FileWriter.close();
+
     }
 
 }

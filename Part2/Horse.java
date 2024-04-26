@@ -16,6 +16,7 @@ public class Horse
     private int wins;
     private int losses;
     private int winstreak;
+    private int topWinstreak;
     
       
     //Constructor of class Horse
@@ -29,6 +30,10 @@ public class Horse
        this.distance = 0;
        this.fallen = false;
        this.confidence = horseConfidence;
+       this.wins = 0;
+       this.losses = 0;
+       this.winstreak = 0;
+       this.topWinstreak = 0;
     }
 
     //Other methods of class Horse
@@ -108,13 +113,33 @@ public class Horse
         return this.winstreak;
     }
 
+    public int getTopWinstreak(){
+        return this.topWinstreak;
+    }
+
     public void win(){
         this.wins  ++;
         this.winstreak ++;
+        if(this.winstreak > this.topWinstreak){
+            this.topWinstreak = this.winstreak;
+        }
     }
 
     public void lose(){
         this.losses ++;
         this.winstreak = 0;
+    }
+
+    @Override
+    public String toString() {
+        String returnString = this.name + ":  Wins-" + this.wins + ", Losses-" + this.losses + ", current Winstreak-" + this.winstreak + ", highest Winstreak-" + this.topWinstreak + ", current Confidence Level-" + String.format("%.3f",this.confidence);
+
+        return returnString;
+    }
+
+    public String storeString() {
+        String returnString = this.name + " : "+ this.symbol + " " + this.distance + " " + this.fallen + " " + this.confidence + " " + this.wins + " " + this.losses + " " + this.winstreak + " " + this.topWinstreak;
+
+        return returnString;
     }
 }
