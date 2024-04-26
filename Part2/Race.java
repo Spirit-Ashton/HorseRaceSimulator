@@ -325,4 +325,8 @@ public class Race
         return this.raceLength;
     }
 
+    public HashMap<Integer, Horse> getHorseMap(){
+        return this.horseMap;
+    }
+
 }
