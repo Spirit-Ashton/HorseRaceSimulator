@@ -103,8 +103,21 @@ public class GUI extends JFrame{
                 CHMainPanel.setBackground(new Color(0,0,0,0));
                 CHMainPanel.setName("Delete");
 
+                JButton StartRaceButton = new JButton("Start Race!");
+                StartRaceButton.addActionListener(E -> StartRace());
+                StartRaceButton.setBackground(Color.decode("#261D03"));
+                StartRaceButton.setForeground(Color.decode("#FFC685"));
+                StartRaceButton.setFocusPainted(false);
+                StartRaceButton.setBorderPainted(false);
+                StartRaceButton.setEnabled(false);
+                StartRaceButton.setName("Delete");
+
+
+
+                ArrayList<JButton> LockedInHorses = new ArrayList<>();
+
                 if (mainRace != null){
-                    JLabel RaceInfoLabel = new JLabel(mainRace.getLanes() + " Lane Race, " + mainRace.getRaceLength() + " Metres.");
+                    JLabel RaceInfoLabel = new JLabel(mainRace.getLanes() + " Lane Track, " + mainRace.getRaceLength() + " Metres.");
                     RaceInfoLabel.setForeground(Color.decode("#FFF8F0"));
                     RaceInfoLabel.setFont(new Font("Dialog", Font.BOLD, 18));
                     RaceInfoLabel.setName("Delete");
@@ -155,18 +168,26 @@ public class GUI extends JFrame{
                                     }
                                 }
                                 int laneValue = addHorseScreen(thisHorse);
-                                System.out.println(laneValue);
 
                                 if (laneValue != -1){
                                     chooseHorseButton.setText("Lane: " + laneValue);
                                     chooseHorseButton.setBackground(Color.decode("#261D03"));
                                     chooseHorseButton.setForeground(Color.decode("#FFC685"));
                                     chooseHorseButton.setBorderPainted(false);
+                                    chooseHorseButton.setEnabled(false);
+                                    LockedInHorses.add(chooseHorseButton);
                                     for ( ActionListener AL : chooseHorseButton.getActionListeners()){
                                         chooseHorseButton.removeActionListener(AL);
-                                        chooseHorseButton.setEnabled(false);
                                     }
                                 }
+
+                                if(LockedInHorses.size() >= 2){
+                                    StartRaceButton.setEnabled(true);
+                                    StartRaceButton.setBackground(Color.decode("#F4D06F"));
+                                    StartRaceButton.setForeground(Color.decode("#23231A"));
+                                    StartRaceButton.setBorderPainted(true);
+                                }
+
                             });
 
                             gridConstraints.insets = new Insets(2,2,20,2);
@@ -188,6 +209,15 @@ public class GUI extends JFrame{
                             gridConstraints.ipady = 10;
 
                             CHMainPanel.add(CHBlockPanel);
+
+                            gridConstraints.insets = new Insets(2,2,70,2);
+                            gridConstraints.gridx = 0;
+                            gridConstraints.gridy =5 ;
+                            gridConstraints.ipadx = 15;
+                            gridConstraints.ipady = 10;
+
+                            ChooseHorsesScreen.add(StartRaceButton, gridConstraints);
+
                             }
                     }
 
@@ -200,7 +230,7 @@ public class GUI extends JFrame{
 
                     gridConstraints.insets = new Insets(2,2,50,2);
                     gridConstraints.gridx = 0;
-                    gridConstraints.gridy = 1;
+                    gridConstraints.gridy = 2;
                     gridConstraints.ipadx = 15;
                     gridConstraints.ipady = 10;
 
@@ -397,7 +427,9 @@ public class GUI extends JFrame{
         JButton chooseHorsesBackButton = createButton("Back");
         chooseHorsesBackButton.addActionListener(e -> HomeScreen());
         chooseHorsesBackButton.addActionListener(e ->{
-            resetHorses();
+            try{
+                resetHorses();
+            } catch (Exception E){}
             for( Component C : ChooseHorsesScreen.getComponents()){
                 try {
                     if (C.getName().equals("Delete")) {
@@ -420,7 +452,7 @@ public class GUI extends JFrame{
         gridConstraints.insets = new Insets(2,2,2,2);
 
         gridConstraints.gridx = 0;
-        gridConstraints.gridy = 4;
+        gridConstraints.gridy = 6;
 
         ChooseHorsesScreen.add(chooseHorsesBackButton, gridConstraints);
 
