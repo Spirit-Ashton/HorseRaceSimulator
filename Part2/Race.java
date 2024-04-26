@@ -412,7 +412,7 @@ public class Race
         LineOutput.add(returnMultiplePrint(' ',raceLength));
 
         LineOutput.add("|");
-=
+
 
         StringBuffer stringBuffer = new StringBuffer();
         for (String S : LineOutput){
