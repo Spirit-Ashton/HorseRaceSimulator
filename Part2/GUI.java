@@ -22,12 +22,22 @@ public class GUI extends JFrame implements Runnable{
     private static ArrayList<JPanel> RaceSnapshot;
     private static JPanel RaceScreen;
     private static ArrayList<JPanel> InfoPanes;
-    private static final GUI Instance = new GUI();
+    private static final GUI Instance;
+
+    static {
+        try {
+            Instance = new GUI();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     public static GUI getInstance(){
         return Instance;
     }
-    private GUI() {
+    private GUI() throws IOException {
+
+        LoadHorses();;
 
         //Screen Initialisation////////////////////////////////////////////////////////////////
 
@@ -1152,6 +1162,24 @@ public class GUI extends JFrame implements Runnable{
         BufferedWriter.close();
         FileWriter.close();
 
+    }
+
+    private static void LoadHorses() throws IOException {
+        File HorseFile = new File("Horses.txt");
+        Scanner SCANNER = new Scanner(HorseFile);
+
+        ArrayList<String> HorseLines = new ArrayList<>();
+        while(SCANNER.hasNextLine()){
+            HorseLines.add(SCANNER.nextLine());
+        }
+
+        for(String S : HorseLines){
+            ArrayList<String> SplitData = new ArrayList<>();
+            for(String s : S.split(" ")){
+                SplitData.add(s);
+            }
+            AllHorses.add(new Horse(  SplitData.get(0)  ,  SplitData.get(1).charAt(0)  ,  Integer.valueOf(SplitData.get(2))  ,  Boolean.valueOf(SplitData.get(3)) , Double.valueOf(SplitData.get(4)) , Integer.valueOf(SplitData.get(5))  , Integer.valueOf(SplitData.get(6))  , Integer.valueOf(SplitData.get(7))  , Integer.valueOf(SplitData.get(8))  ));
+        }
     }
 
 }

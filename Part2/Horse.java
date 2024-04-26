@@ -36,6 +36,17 @@ public class Horse
        this.topWinstreak = 0;
     }
 
+    public Horse(String name, char symbol, int distance, boolean fallen, double confidence, int wins, int losses, int winstreak, int topWinstreak){
+        this.name = name;
+        this.symbol = symbol;
+        this. distance = distance;
+        this.fallen = fallen;
+        this.confidence = confidence;
+        this.wins = wins;
+        this.losses = losses;
+        this. winstreak = winstreak;
+        this.topWinstreak = topWinstreak;
+    }
     //Other methods of class Horse
     public void fall()
     {
@@ -138,7 +149,7 @@ public class Horse
     }
 
     public String storeString() {
-        String returnString = this.name + " : "+ this.symbol + " " + this.distance + " " + this.fallen + " " + this.confidence + " " + this.wins + " " + this.losses + " " + this.winstreak + " " + this.topWinstreak;
+        String returnString = this.name + " "+ this.symbol + " " + this.distance + " " + this.fallen + " " + this.confidence + " " + this.wins + " " + this.losses + " " + this.winstreak + " " + this.topWinstreak;
 
         return returnString;
     }

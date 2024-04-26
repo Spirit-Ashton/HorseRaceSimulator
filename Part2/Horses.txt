@@ -1,2 +1,2 @@
-Charleston : * 0 false 0.5 0 0 0 0
-Ignacious : * 0 false 0.786 0 0 0 0
+Charleston * 0 false 0.5 0 0 0 0
+Ignacious * 0 false 0.786 0 0 0 0
