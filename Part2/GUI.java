@@ -397,6 +397,7 @@ public class GUI extends JFrame{
         JButton chooseHorsesBackButton = createButton("Back");
         chooseHorsesBackButton.addActionListener(e -> HomeScreen());
         chooseHorsesBackButton.addActionListener(e ->{
+            resetHorses();
             for( Component C : ChooseHorsesScreen.getComponents()){
                 try {
                     if (C.getName().equals("Delete")) {
@@ -676,6 +677,12 @@ public class GUI extends JFrame{
 
     public void addHorse(Horse Horse, int Lane){
         mainRace.addHorse(Horse, Lane);
+
+        return;
+    }
+
+    public void resetHorses(){
+        mainRace = new Race(mainRace.getLanes(), mainRace.getRaceLength());
 
         return;
     }
