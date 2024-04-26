@@ -26,6 +26,7 @@ public class GUI extends JFrame{
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainFrame.setLayout(new CardLayout());
         mainFrame.setSize(1200, 600);
+        mainFrame.setLocationRelativeTo(null);
 
         JPanel TitleScreen = new JPanel(new GridBagLayout());
         TitleScreen.setBackground(Color.decode("#392F5A"));
@@ -98,60 +99,91 @@ public class GUI extends JFrame{
 
                 JPanel CHMainPanel = new JPanel(new FlowLayout());
                 CHMainPanel.setBackground(new Color(0,0,0,0));
-//                CHMainPanel.setName("Button Panel");
+                CHMainPanel.setName("Delete");
 
+                if (mainRace != null){
+                    JLabel RaceInfoLabel = new JLabel(mainRace.getLanes() + " Lane Race, " + mainRace.getRaceLength() + " Metres.");
+                    RaceInfoLabel.setForeground(Color.decode("#FFF8F0"));
+                    RaceInfoLabel.setFont(new Font("Dialog", Font.BOLD, 18));
+                    RaceInfoLabel.setName("Delete");
 
-                HashMap<Horse, JLabel> HorseLabelMap = new HashMap<>();
+                    HashMap<Horse, JLabel> HorseLabelMap = new HashMap<>();
 
-                for (Horse H : AllHorses){
-                    JLabel HName = new JLabel(H.getName(), SwingConstants.CENTER);
-                    HName.setForeground(Color.decode("#FFF8F0"));
-                    HName.setFont(new Font("Dialog", Font.BOLD, 16));
+                    for (Horse H : AllHorses){
+                        JLabel HName = new JLabel(H.getName(), SwingConstants.CENTER);
+                        HName.setForeground(Color.decode("#FFF8F0"));
+                        HName.setFont(new Font("Dialog", Font.BOLD, 16));
 
-                    HorseLabelMap.put(H, HName);
-                }
-
-
-                gridConstraints.insets = new Insets(2,2,20,2);
-                gridConstraints.gridx = 0;
-                gridConstraints.gridy = 1;
-                gridConstraints.ipadx = 15;
-                gridConstraints.ipady = 10;
-
-                ChooseHorsesScreen.add(CHMainPanel, gridConstraints);
-
-                if(HorseLabelMap.isEmpty()){
-                    JLabel noHorsesLabel = new JLabel("No Horses to Race :(");
-                    noHorsesLabel.setForeground(Color.decode("#FFF8F0"));
-                    CHMainPanel.add(noHorsesLabel);
-                } else {
-                    for (JLabel J : HorseLabelMap.values()) {
-                        JPanel CHBlockPanel = new JPanel(new GridBagLayout());
-                        CHBlockPanel.setBackground(new Color(0,0,0,0));
-//                        CHBlockPanel.setBorder(new LineBorder(Color.decode("#23231A"), 2));
-
-                        JButton chooseHorseButton = createButton("Select!");
-
-                        gridConstraints.insets = new Insets(2,2,20,2);
-                        gridConstraints.gridx = 0;
-                        gridConstraints.gridy = 0;
-                        gridConstraints.ipadx = 15;
-                        gridConstraints.ipady = 10;
-
-                        CHBlockPanel.add(J, gridConstraints);
-
-                        gridConstraints.gridy = 1;
-
-                        CHBlockPanel.add(chooseHorseButton, gridConstraints);
-
-                        gridConstraints.insets = new Insets(2,2,2,2);
-                        gridConstraints.gridx = 0;
-                        gridConstraints.gridy = 1;
-                        gridConstraints.ipadx = 15;
-                        gridConstraints.ipady = 10;
-
-                        CHMainPanel.add(CHBlockPanel);
+                        HorseLabelMap.put(H, HName);
                     }
+
+                    gridConstraints.insets = new Insets(2,2,20,2);
+                    gridConstraints.gridx = 0;
+                    gridConstraints.gridy = 1;
+                    gridConstraints.ipadx = 15;
+                    gridConstraints.ipady = 10;
+
+                    ChooseHorsesScreen.add(RaceInfoLabel, gridConstraints);
+
+                    gridConstraints.insets = new Insets(2,2,20,2);
+                    gridConstraints.gridx = 0;
+                    gridConstraints.gridy = 3;
+                    gridConstraints.ipadx = 15;
+                    gridConstraints.ipady = 10;
+
+                    ChooseHorsesScreen.add(CHMainPanel, gridConstraints);
+
+                    if(HorseLabelMap.isEmpty()){
+                        JLabel noHorsesLabel = new JLabel("No Horses to Race :(");
+                        noHorsesLabel.setForeground(Color.decode("#FFF8F0"));
+                        CHMainPanel.add(noHorsesLabel);
+                    } else {
+                        for (JLabel J : HorseLabelMap.values()) {
+                            JPanel CHBlockPanel = new JPanel(new GridBagLayout());
+                            CHBlockPanel.setBackground(new Color(0,0,0,0));
+    //                        CHBlockPanel.setBorder(new LineBorder(Color.decode("#23231A"), 2));
+
+                            JButton chooseHorseButton = createButton("Select!");
+                            chooseHorseButton.addActionListener(E -> addHorseScreen());
+
+                            gridConstraints.insets = new Insets(2,2,20,2);
+                            gridConstraints.gridx = 0;
+                            gridConstraints.gridy = 0;
+                            gridConstraints.ipadx = 15;
+                            gridConstraints.ipady = 10;
+
+                            CHBlockPanel.add(J, gridConstraints);
+
+                            gridConstraints.gridy = 1;
+
+                            CHBlockPanel.add(chooseHorseButton, gridConstraints);
+
+                            gridConstraints.insets = new Insets(2,2,2,2);
+                            gridConstraints.gridx = 0;
+                            gridConstraints.gridy = 1;
+                            gridConstraints.ipadx = 15;
+                            gridConstraints.ipady = 10;
+
+                            CHMainPanel.add(CHBlockPanel);
+                            }
+                    }
+
+
+                }  else {
+                    JLabel NoRaceLabel = new JLabel("There is no race set!");
+                    NoRaceLabel.setForeground(Color.decode("#FFF8F0"));
+                    NoRaceLabel.setFont(new Font("Dialog", Font.BOLD, 18));
+                    NoRaceLabel.setName("Delete");
+
+                    gridConstraints.insets = new Insets(2,2,50,2);
+                    gridConstraints.gridx = 0;
+                    gridConstraints.gridy = 1;
+                    gridConstraints.ipadx = 15;
+                    gridConstraints.ipady = 10;
+
+                    ChooseHorsesScreen.add(NoRaceLabel, gridConstraints);
+
+
                 }
 
             });
@@ -342,12 +374,17 @@ public class GUI extends JFrame{
         JButton chooseHorsesBackButton = createButton("Back");
         chooseHorsesBackButton.addActionListener(e -> HomeScreen());
         chooseHorsesBackButton.addActionListener(e ->{
-//            System.out.println(ChooseHorsesScreen.getComponent(2).getName());
-            ChooseHorsesScreen.remove(2);
+            for( Component C : ChooseHorsesScreen.getComponents()){
+                try {
+                    if (C.getName().equals("Delete")) {
+                        ChooseHorsesScreen.remove(C);
+                    }
+                }catch (Exception E){}
+            }
         });
 
 
-        gridConstraints.insets = new Insets(2,2,50,2);
+        gridConstraints.insets = new Insets(2,2,10,2);
         gridConstraints.gridx = 0;
         gridConstraints.gridy = 0;
         gridConstraints.ipadx = 15;
@@ -359,7 +396,7 @@ public class GUI extends JFrame{
         gridConstraints.insets = new Insets(2,2,2,2);
 
         gridConstraints.gridx = 0;
-        gridConstraints.gridy = 2;
+        gridConstraints.gridy = 4;
 
         ChooseHorsesScreen.add(chooseHorsesBackButton, gridConstraints);
 
@@ -474,10 +511,10 @@ public class GUI extends JFrame{
         }
 
         if(Accepted == true){
+            NewRace(TextFields[0].getText(), TextFields[1].getText());
             for(JTextField J : TextFields){
                 J.setText("");
             }
-            NewRace(TextFields[0].getText(), TextFields[1].getText());
             HomeScreen();
         }
     }
@@ -515,6 +552,80 @@ public class GUI extends JFrame{
         newButton.setForeground(Color.decode("#23231A"));
 
         return newButton;
+    }
+
+    public int addHorseScreen(){
+        JFrame ChooseLaneFrame = new JFrame("Choose Lane");
+        ChooseLaneFrame.setLayout(new CardLayout());
+        ChooseLaneFrame.setSize(500,250);
+        ChooseLaneFrame.setMaximumSize( new Dimension(800, 900));
+
+
+        JPanel MainPanel = new JPanel(new GridBagLayout());
+        MainPanel.setBackground(Color.decode("#23231A"));
+
+        ChooseLaneFrame.add(MainPanel);
+
+        JLabel LaneTitle = new JLabel("Which lane will you choose?", SwingConstants.CENTER);
+        LaneTitle.setForeground(Color.decode("#F4D06F"));
+        LaneTitle.setFont(new Font("Dialog", Font.BOLD, 20));
+
+        JPanel ButtonPanel = new JPanel(new GridBagLayout());
+        ButtonPanel.setBackground(new Color(0,0,0,0));
+
+        JButton[] LaneButtons = new JButton[mainRace.getLanes()];
+        GridBagConstraints gridConstraints = new GridBagConstraints();
+        gridConstraints.insets = new Insets(2,2,2,2);
+        gridConstraints.gridx = 0;
+        gridConstraints.gridy = 0;
+        gridConstraints.ipadx = 15;
+        gridConstraints.ipady = 10;
+        gridConstraints.fill = GridBagConstraints.BOTH;
+
+        for(int i = 0; i < mainRace.getLanes(); i++){
+
+
+            LaneButtons[i] = createButton("Lane " +( i + 1));
+
+            gridConstraints.gridx = gridConstraints.gridx + 1;
+
+            if( i % 7 == 0){
+                gridConstraints.gridy = gridConstraints.gridy + 1;
+                gridConstraints.gridx = 0;
+            }
+
+            ButtonPanel.add(LaneButtons[i], gridConstraints);
+
+        }
+
+
+        gridConstraints.insets = new Insets(2,2,20,2);
+        gridConstraints.gridx = 0;
+        gridConstraints.gridy = 0;
+        gridConstraints.ipadx = 15;
+        gridConstraints.ipady = 10;
+        gridConstraints.fill = GridBagConstraints.NONE;
+
+        MainPanel.add(LaneTitle, gridConstraints);
+
+//        for(JButton K : LaneButtons){
+//            ButtonPanel.add(K);
+//        }
+
+        gridConstraints.gridy = 1;
+        gridConstraints.insets = new Insets(2,2,20,2);
+
+        MainPanel.add(ButtonPanel, gridConstraints);
+
+//        MainPanel.setSize(  MainPanel.getWidth() , MainPanel.getHeight() + (30 *(mainRace.getLanes())));
+        MainPanel.setSize(MainPanel.getWidth(), 500);
+
+        ChooseLaneFrame.pack();
+        ChooseLaneFrame.setLocationRelativeTo(mainFrame);
+
+        ChooseLaneFrame.setVisible(true);
+
+        return 0;
     }
 
     public void addHorse(){
