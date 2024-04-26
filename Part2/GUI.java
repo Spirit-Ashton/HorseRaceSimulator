@@ -475,12 +475,43 @@ public class GUI extends JFrame implements Runnable{
 
             NewRaceScreen.add(RaceSubmitButton, gridConstraints);
 
+            JButton newRaceBackButton = createButton("Back");
+            newRaceBackButton.addActionListener(e -> HomeScreen());
+            newRaceBackButton.addActionListener(e -> {
+                RaceDistance.setText("");
+                LaneNumber.setText("");
+            });
+
+
+            gridConstraints.insets = new Insets(30,2,2,2);
+            gridConstraints.gridx = 0;
+            gridConstraints.gridy = 5;
+            gridConstraints.ipadx = 15;
+            gridConstraints.ipady = 10;
+
+            NewRaceScreen.add(newRaceBackButton,gridConstraints);
+
         //Add Horse Screen////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         JLabel newHorseNameLabel = new JLabel("What would you like to name your new horse?");
         newHorseNameLabel.setForeground(Color.decode("#FFF8F0"));
 
         JTextField newHorseName = new JTextField(10);
+
+        newHorseName.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                if(!newHorseName.getText().equals("")){
+                    newHorseName.setText("");
+                    newHorseName.setForeground(Color.BLACK);
+                }
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                newHorseName.setForeground(Color.GRAY);
+            }
+        });
 
         JLabel newHorseConfidenceLabel = new JLabel("How Confident would you like your horse to be?");
         newHorseConfidenceLabel.setForeground(Color.decode("#FFF8F0"));
@@ -530,6 +561,22 @@ public class GUI extends JFrame implements Runnable{
         gridConstraints.insets = new Insets(20, 2 ,2,2);
 
         AddHorseScreen.add(newHorseSubmitButton, gridConstraints);
+
+        JButton newHorseBackButton = createButton("Back");
+        newHorseBackButton.addActionListener(e -> HomeScreen());
+        newHorseBackButton.addActionListener(e -> {
+            newHorseName.setText("");
+            newHorseConfidence.setText("");
+        });
+
+
+        gridConstraints.insets = new Insets(30,2,2,2);
+        gridConstraints.gridx = 0;
+        gridConstraints.gridy = 5;
+        gridConstraints.ipadx = 15;
+        gridConstraints.ipady = 10;
+
+        AddHorseScreen.add(newHorseBackButton,gridConstraints);
 
     //Choose Horses Screen/////////////////////////////////////////////////////////////////////
 
