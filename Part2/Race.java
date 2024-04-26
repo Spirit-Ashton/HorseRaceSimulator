@@ -20,6 +20,8 @@ public class Race extends Thread
     private int raceLength;
     private int lanes;
     private HashMap<Integer, Horse> horseMap;
+    private Boolean allFallen;
+    private Horse wonBy;
 
 
     /**
@@ -34,6 +36,8 @@ public class Race extends Thread
         raceLength = distance;
         lanes = noLanes;
         horseMap = new HashMap<>();
+        allFallen = false;
+        wonBy = null;
     }
 
     /**
@@ -150,89 +154,13 @@ public class Race extends Thread
 
             if (allFall) {
                 System.out.print("All Horses have fallen!");
+                allFallen = true;
                 finished = true;
             }
         }
     }
 
-    public void startRace(GUI Parent) throws UnsupportedEncodingException
-    {
-        PrintStream out = new PrintStream(System.out, true, "UTF-8");
-        //declare a local variable to tell us when the race is finished
-        boolean finished = false;
 
-        //reset all the lanes (all horses not fallen and back to 0).
-//        lane1Horse.goBackToStart();
-//        lane2Horse.goBackToStart();
-//        lane3Horse.goBackToStart();
-//        for(int i = 0; i < horseArray.size(); i++)
-//        {
-//            horseArray.get(i).goBackToStart();
-//        }
-        for (Horse H : horseMap.values()){
-            H.goBackToStart();
-        }
-
-        while (!finished)
-        {
-
-            //move each horse
-            for(Horse H : horseMap.values()){
-                moveHorse(H);
-            }
-
-            //print the race positions
-            printRace();
-            Thread GUIThread = new Thread(Parent);
-            GUIThread.start();
-
-            //if any of the three horses has won the race is finished
-//            if ( raceWonBy(lane1Horse) || raceWonBy(lane2Horse) || raceWonBy(lane3Horse) )
-//            {
-//                finished = true;
-//            }
-//            for(int i = 0; i < horseArray.size(); i++)
-//            {
-//                if (raceWonBy(horseArray.get(i))){
-//                    finished = true;
-//                }
-//            }
-            for(Horse H : horseMap.values()){
-                if(raceWonBy(H)){
-                    finished = true;
-                }
-            }
-            //wait for 100 milliseconds
-            try{
-
-                TimeUnit.MILLISECONDS.sleep(100);
-            }catch(Exception e){}
-
-//            if(lane1Horse.hasFallen() && lane2Horse.hasFallen() && lane3Horse.hasFallen())
-//            {
-//                System.out.print("All Horses have fallen!");
-//                finished = true;
-//            }
-            boolean allFall= true;
-
-//            for(int i = 0; i < horseArray.size(); i++)
-//            {
-//                if (!horseArray.get(i).hasFallen()){
-//                    allFall = false;
-//                }
-//            }
-            for (Horse H : horseMap.values()){
-                if(!H.hasFallen()){
-                    allFall = false;
-                }
-            }
-
-            if (allFall) {
-                System.out.print("All Horses have fallen!");
-                finished = true;
-            }
-        }
-    }
     /**
      * Randomly make a horse move forward or fall depending
      * on its confidence rating
@@ -275,6 +203,7 @@ public class Race extends Thread
         {
             System.out.print("And the winner is " + theHorse.getName());
             theHorse.setConfidence(theHorse.getConfidence() + 0.1);
+            wonBy = theHorse;
             return true;
         }
         else
@@ -524,6 +453,14 @@ public class Race extends Thread
 
     public HashMap<Integer, Horse> getHorseMap(){
         return this.horseMap;
+    }
+
+    public Boolean allFallen(){
+        return allFallen;
+    }
+
+    public Horse getWonBy(){
+        return wonBy;
     }
 
 }

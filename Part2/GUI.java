@@ -21,6 +21,7 @@ public class GUI extends JFrame implements Runnable{
     private static GridBagConstraints gridConstraints;
     private static ArrayList<JPanel> RaceSnapshot;
     private static JPanel RaceScreen;
+    private static ArrayList<JPanel> InfoPanes;
     private static final GUI Instance = new GUI();
 
     public static GUI getInstance(){
@@ -104,7 +105,6 @@ public class GUI extends JFrame implements Runnable{
 
 
             JButton StartButton = createButton("Start Race!");
-            StartButton.addActionListener(e -> switchScreens(HomeScreen, ChooseHorsesScreen));
             StartButton.addActionListener(e-> {
 
                 JPanel CHMainPanel = new JPanel(new FlowLayout());
@@ -112,8 +112,22 @@ public class GUI extends JFrame implements Runnable{
                 CHMainPanel.setName("Delete");
 
                 JButton StartRaceButton = new JButton("Start Race!");
+                StartRaceButton.setBackground(Color.decode("#261D03"));
+                StartRaceButton.setForeground(Color.decode("#FFC685"));
+                StartRaceButton.setFocusPainted(false);
+                StartRaceButton.setBorderPainted(false);
+                StartRaceButton.setEnabled(false);
+                StartRaceButton.setName("Delete");
                 StartRaceButton.addActionListener(E -> {
-                    try {
+                    for( Component C : ChooseHorsesScreen.getComponents()){
+                        try {
+                            if (C.getName().equals("Delete")) {
+                                ChooseHorsesScreen.remove(C);
+                            }
+                        }catch (Exception é){}
+                    }
+                    try {p
+                        HomeScreen();
                         StartRaceGUI();
                         Thread raceThread = new Thread(mainRace);
                         raceThread.start();
@@ -121,16 +135,14 @@ public class GUI extends JFrame implements Runnable{
                         throw new RuntimeException(ex);
                     }
                 });
-                StartRaceButton.setBackground(Color.decode("#261D03"));
-                StartRaceButton.setForeground(Color.decode("#FFC685"));
-                StartRaceButton.setFocusPainted(false);
-                StartRaceButton.setBorderPainted(false);
-                StartRaceButton.setEnabled(false);
-                StartRaceButton.setName("Delete");
+
+
 
 
 
                 ArrayList<JButton> LockedInHorses = new ArrayList<>();
+
+
 
                 if (mainRace != null){
                     JLabel RaceInfoLabel = new JLabel(mainRace.getLanes() + " Lane Track, " + mainRace.getRaceLength() + " Metres.");
@@ -199,6 +211,7 @@ public class GUI extends JFrame implements Runnable{
                                 }
 
                                 if(LockedInHorses.size() >= 2){
+                                    System.out.println(LockedInHorses);
                                     StartRaceButton.setEnabled(true);
                                     StartRaceButton.setBackground(Color.decode("#F4D06F"));
                                     StartRaceButton.setForeground(Color.decode("#23231A"));
@@ -255,6 +268,8 @@ public class GUI extends JFrame implements Runnable{
 
 
                 }
+
+            switchScreens(HomeScreen, ChooseHorsesScreen);
 
             });
 
@@ -709,9 +724,14 @@ public class GUI extends JFrame implements Runnable{
 
     public void resetHorses(){
         mainRace = new Race(mainRace.getLanes(), mainRace.getRaceLength());
+        for(Horse H : AllHorses){
+            H.resetFall();
 
+        }
         return;
     }
+
+
 
     public void StartRaceGUI() throws UnsupportedEncodingException {
         JDialog RaceDialog = new JDialog(mainFrame, "Race!");
@@ -727,43 +747,80 @@ public class GUI extends JFrame implements Runnable{
         JPanel MainHolder = new JPanel(new GridBagLayout());
         MainHolder.setBackground(Color.decode("#3A2F5A"));
 
-        JPanel InfoPane = new JPanel(new GridBagLayout());
-        InfoPane.setBackground(Color.decode("#23231A"));
-        InfoPane.setBorder(new LineBorder(Color.red, 2));
-//        InfoPane.setSize(500,300);
+        InfoPanes = new ArrayList<>();
 
-        gridConstraints.insets = new Insets(2,2,100,2);
+
+        InfoPanes.add(0, new JPanel(new GridBagLayout()));
+        InfoPanes.get(0).setBackground(Color.decode("#23231A"));
+        InfoPanes.get(0).setBorder(new LineBorder(Color.red, 2));
+
+        gridConstraints.insets = new Insets(2,2,300,2);
+        gridConstraints.gridx = 0;
+        gridConstraints.gridy = 0;
+        gridConstraints.ipadx = 200;
+        gridConstraints.ipady = 30;
+
+        MainHolder.add(InfoPanes.get(0), gridConstraints);
+
+        InfoPanes.add(1, new JPanel(new GridBagLayout()));
+        InfoPanes.get(1).setBackground(Color.decode("#23231A"));
+        InfoPanes.get(1).setBorder(new LineBorder(Color.red, 2));
+
+        gridConstraints.insets = new Insets(2,2,2,2);
+        gridConstraints.gridx = 0;
+        gridConstraints.gridy = 4;
+        gridConstraints.ipadx = 200;
+        gridConstraints.ipady = 30;
+
+        MainHolder.add(InfoPanes.get(1), gridConstraints);
+
+        InfoPanes.add(2, new JPanel(new GridBagLayout()));
+        InfoPanes.get(2).setBackground(Color.decode("#23231A"));
+
+        gridConstraints.insets = new Insets(2,2,2,2);
         gridConstraints.gridx = 0;
         gridConstraints.gridy = 0;
         gridConstraints.ipadx = 0;
         gridConstraints.ipady = 0;
 
-        MainHolder.add(InfoPane, gridConstraints);
 
-        JLabel InfoLabel = new JLabel("Nom");
-        InfoLabel.setForeground(Color.decode("#FFF8F0"));
+        MainHolder.add(InfoPanes.get(2),gridConstraints);
+        InfoPanes.get(2).setVisible(false);
+
+        JButton FinishedButton = createButton("Back Home");
+        FinishedButton.addActionListener( e -> {
+            RaceDialog.dispatchEvent(new WindowEvent(RaceDialog, WindowEvent.WINDOW_CLOSING));
+            try{
+                HomeScreen();
+                TimeUnit.MILLISECONDS.sleep(100);
+                resetHorses();
+
+            }catch(Exception E){}
+
+        });
 
 
-        gridConstraints.insets = new Insets(2,2,2,2);
-        gridConstraints.gridx = 0;
-        gridConstraints.gridy = 2;
-        gridConstraints.ipadx = 0;
-        gridConstraints.ipady = 0;
+        InfoPanes.get(2).add(FinishedButton, gridConstraints);
 
-        InfoPane.add(InfoLabel,gridConstraints);
+        InfoPanes.get(0).removeAll();
+        InfoPanes.get(1).removeAll();
 
 
         RaceScreen = new JPanel(new GridBagLayout());
         RaceScreen.setBackground(Color.decode("#392F5A"));
         RaceScreen.setBorder(new LineBorder(Color.BLACK, 2));
 
-        gridConstraints.insets = new Insets(40,2,2,2);
+        gridConstraints.insets = new Insets(100,2,2,2);
         gridConstraints.gridx = 0;
         gridConstraints.gridy = 0;
         gridConstraints.ipadx = 0;
         gridConstraints.ipady = 0;
 
+
         MainHolder.add(RaceScreen,gridConstraints);
+
+        gridConstraints.weightx = 0;
+        gridConstraints.weighty = 0;
 
         RaceDialog.add(MainHolder);
 
@@ -771,7 +828,7 @@ public class GUI extends JFrame implements Runnable{
 
         RaceSnapshot= new ArrayList<>();
 
-        trackSnapshot(gridConstraints, RaceSnapshot, RaceScreen);
+        trackSnapshot(gridConstraints, RaceSnapshot, RaceScreen, InfoPanes);
 
         RaceDialog.setVisible(true);
 
@@ -789,9 +846,85 @@ public class GUI extends JFrame implements Runnable{
 //        }).start();
 //    }
 
-    private static void trackSnapshot(GridBagConstraints gridConstraints, ArrayList<JPanel> RaceSnapshot, JPanel RaceScreen) {
+    private static void trackSnapshot(GridBagConstraints gridConstraints, ArrayList<JPanel> RaceSnapshot, JPanel RaceScreen, ArrayList<JPanel> InfoPanes) {
         RaceSnapshot = new ArrayList<>();
         RaceScreen.removeAll();
+
+        InfoPanes.get(0).removeAll();
+        InfoPanes.get(1).removeAll();
+        int Interval = 0;
+
+        Boolean allFallen = true;
+
+        for (Horse H : mainRace.getHorseMap().values()){
+            if(!H.hasFallen()){
+                allFallen = false;
+            }
+        }
+
+        for(Horse H : mainRace.getHorseMap().values()){
+            String ConfidenceText = H.getName() + " Confidence Level: " + String.format("%.1f", H.getConfidence());
+            JLabel InfoLabel = new JLabel(ConfidenceText);
+            InfoLabel.setForeground(Color.decode("#FFF8F0"));
+
+
+            gridConstraints.insets = new Insets(2,2,2,2);
+            gridConstraints.gridx = 0;
+            gridConstraints.gridy = Interval;
+            gridConstraints.ipadx = 0;
+            gridConstraints.ipady = 0;
+
+
+            InfoPanes.get(0).add(InfoLabel,gridConstraints);
+            String DistanceText  = null;
+
+            if(!allFallen && mainRace.getWonBy() == null) {
+                if (H.hasFallen()) {
+                    DistanceText = H.getName() + " has fallen at: " + H.getDistanceTravelled() + " Meters!";
+                } else {
+                    DistanceText = H.getName() + " has travelled: " + H.getDistanceTravelled() + " Meters!";
+
+                }
+                InfoLabel = new JLabel(DistanceText);
+                InfoLabel.setForeground(Color.decode("#FFF8F0"));
+
+
+                InfoPanes.get(1).add(InfoLabel, gridConstraints);
+
+            }
+
+            Interval ++;
+        }
+
+        if(allFallen && mainRace.getWonBy() == null){
+            JLabel InfoLabel = new JLabel("All the Horses have fallen! Nobody won!");
+            InfoLabel.setFont(new Font("Dialog", Font.BOLD, 20));
+            InfoLabel.setForeground(Color.decode("#FFF8F0"));
+
+            gridConstraints.insets = new Insets(2,2,2,2);
+            gridConstraints.gridx = 0;
+            gridConstraints.gridy = 0;
+            gridConstraints.ipadx = 0;
+            gridConstraints.ipady = 0;
+
+            InfoPanes.get(1).add(InfoLabel,gridConstraints);
+            InfoPanes.get(2).setVisible(true);
+        }
+
+        if(mainRace.getWonBy() != null){
+            JLabel InfoLabel = new JLabel(mainRace.getWonBy().getName() + " Has won the Race! Congratulations!");
+            InfoLabel.setFont(new Font("Dialog", Font.BOLD, 20));
+            InfoLabel.setForeground(Color.decode("#FFF8F0"));
+
+            gridConstraints.insets = new Insets(2,2,2,2);
+            gridConstraints.gridx = 0;
+            gridConstraints.gridy = 0;
+            gridConstraints.ipadx = 0;
+            gridConstraints.ipady = 0;
+
+            InfoPanes.get(1).add(InfoLabel,gridConstraints);
+            InfoPanes.get(2).setVisible(true);
+        }
 
 
         JPanel RaceBlock = new JPanel();
@@ -879,7 +1012,7 @@ public class GUI extends JFrame implements Runnable{
 
     public static void UpdateRace() throws UnsupportedEncodingException {
 //        Instance.StartRaceGUI();
-            trackSnapshot(gridConstraints, RaceSnapshot, RaceScreen);
+            trackSnapshot(gridConstraints, RaceSnapshot, RaceScreen, InfoPanes);
     }
 
 

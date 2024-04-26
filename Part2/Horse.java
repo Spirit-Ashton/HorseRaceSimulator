@@ -83,7 +83,11 @@ public class Horse
 
         return;
     }
-    
+
+    public void resetFall(){
+        this.fallen = false;
+    }
+
     public void setSymbol(char newSymbol)
     {
         this.symbol = newSymbol;
