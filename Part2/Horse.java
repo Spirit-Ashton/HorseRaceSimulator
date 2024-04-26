@@ -13,6 +13,9 @@ public class Horse
     private int distance;
     private boolean fallen;
     private double confidence;
+    private int wins;
+    private int losses;
+    private int winstreak;
     
       
     //Constructor of class Horse
@@ -94,5 +97,24 @@ public class Horse
 
         return;
     }
-    
+
+    public int getLosses() {
+        return this.losses;
+    }
+    public int getWins(){
+        return this.wins;
+    }
+    public int getWinstreak(){
+        return this.winstreak;
+    }
+
+    public void win(){
+        this.wins  ++;
+        this.winstreak ++;
+    }
+
+    public void lose(){
+        this.losses ++;
+        this.winstreak = 0;
+    }
 }

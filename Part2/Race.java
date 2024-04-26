@@ -125,6 +125,8 @@ public class Race extends Thread
             for(Horse H : horseMap.values()){
                 if(raceWonBy(H)){
                     finished = true;
+                } else {
+                    H.lose();
                 }
             }
             //wait for 100 milliseconds
@@ -204,6 +206,7 @@ public class Race extends Thread
             System.out.print("And the winner is " + theHorse.getName());
             theHorse.setConfidence(theHorse.getConfidence() + 0.1);
             wonBy = theHorse;
+            theHorse.win();
             return true;
         }
         else
