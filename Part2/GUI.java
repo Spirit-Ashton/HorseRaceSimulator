@@ -710,6 +710,13 @@ public class GUI extends JFrame{
 
         GridBagConstraints gridConstraints = new GridBagConstraints();
 
+        ArrayList<JPanel> RaceBorder = new ArrayList<>();
+
+//        for(int i = 0; i < mainRace.getRaceLength(); i++){
+//
+//        }
+
+
         RaceDialog.setVisible(true);
 
         return;

@@ -1,3 +1,5 @@
+import javax.print.DocFlavor;
+import javax.sound.sampled.Line;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 import java.util.HashMap;
@@ -23,7 +25,7 @@ public class Race
     /**
      * Constructor for objects of class Race
      * Initially there are no horses in the lanes
-     * 
+     *
      * @param distance the length of the racetrack (in metres/yards...)
      */
     public Race( int noLanes, int distance)
@@ -33,10 +35,10 @@ public class Race
         lanes = noLanes;
         horseMap = new HashMap<>();
     }
-    
+
     /**
      * Adds a horse to the race in a given lane
-     * 
+     *
      * @param theHorse the horse to be added to the race
      * @param laneNumber the lane that the horse will be added to
      */
@@ -53,11 +55,11 @@ public class Race
         }
 //        horseArray.add(theHorse);
     }
-    
+
     /**
      * Start the race
      * The horse are brought to the start and
-     * then repeatedly moved forward until the 
+     * then repeatedly moved forward until the
      * race is finished
      */
     public void startRace() throws UnsupportedEncodingException
@@ -65,7 +67,7 @@ public class Race
         PrintStream out = new PrintStream(System.out, true, "UTF-8");
         //declare a local variable to tell us when the race is finished
         boolean finished = false;
-        
+
         //reset all the lanes (all horses not fallen and back to 0). 
 //        lane1Horse.goBackToStart();
 //        lane2Horse.goBackToStart();
@@ -91,10 +93,10 @@ public class Race
             for(Horse H : horseMap.values()){
                 moveHorse(H);
             }
-                        
+
             //print the race positions
             printRace();
-            
+
             //if any of the three horses has won the race is finished
 //            if ( raceWonBy(lane1Horse) || raceWonBy(lane2Horse) || raceWonBy(lane3Horse) )
 //            {
@@ -112,7 +114,7 @@ public class Race
                 }
             }
             //wait for 100 milliseconds
-            try{ 
+            try{
                 TimeUnit.MILLISECONDS.sleep(100);
             }catch(Exception e){}
 
@@ -141,19 +143,19 @@ public class Race
             }
         }
     }
-    
+
     /**
      * Randomly make a horse move forward or fall depending
      * on its confidence rating
      * A fallen horse cannot move
-     * 
+     *
      * @param theHorse the horse to be moved
      */
     private void moveHorse(Horse theHorse)
     {
         //if the horse has fallen it cannot move, 
         //so only run if it has not fallen
-        
+
         if  (!theHorse.hasFallen())
         {
             //the probability that the horse will move forward depends on the confidence;
@@ -161,7 +163,7 @@ public class Race
             {
                theHorse.moveForward();
             }
-            
+
             //the probability that the horse will fall is very small (max is 0.1)
             //but will also will depends exponentially on confidence 
             //so if you double the confidence, the probability that it will fall is *2
@@ -171,8 +173,8 @@ public class Race
             }
         }
     }
-        
-    /** 
+
+    /**
      * Determines if a horse has won the race
      *
      * @param theHorse The horse we are testing
@@ -191,7 +193,7 @@ public class Race
             return false;
         }
     }
-    
+
     /***
      * Print the race on the terminal
      */
@@ -207,7 +209,7 @@ public class Race
 
         multiplePrint('=',raceLength+3); //top edge of track
         System.out.println();
-        
+
 //        printLane(lane1Horse);
 //        System.out.println();
 //
@@ -230,11 +232,11 @@ public class Race
             }
         }
 
-        
+
         multiplePrint('=',raceLength+3); //bottom edge of track
-        System.out.println();    
+        System.out.println();
     }
-    
+
     /**
      * print a horse's lane during the race
      * for example
@@ -248,13 +250,13 @@ public class Race
         //and after the horse
         int spacesBefore = theHorse.getDistanceTravelled();
         int spacesAfter = raceLength - theHorse.getDistanceTravelled();
-        
+
         //print a | for the beginning of the lane
         System.out.print('|');
-        
+
         //print the spaces before the horse
         multiplePrint(' ',spacesBefore);
-        
+
         //if the horse has fallen then print dead
         //else print the horse's symbol
         if(theHorse.hasFallen())
@@ -265,7 +267,7 @@ public class Race
         {
             System.out.print(theHorse.getSymbol());
         }
-        
+
         //print the spaces after the horse
         multiplePrint(' ',spacesAfter);
 
@@ -301,7 +303,7 @@ public class Race
     /***
      * print a character a given number of times.
      * e.g. printmany('x',5) will print: xxxxx
-     * 
+     *
      * @param aChar the character to Print
      */
     private void multiplePrint(char aChar, int times) throws UnsupportedEncodingException
@@ -314,6 +316,113 @@ public class Race
             System.out.print(aChar);
             i = i + 1;
         }
+    }
+
+    public ArrayList<String> returnRace() throws UnsupportedEncodingException{
+        ArrayList<String> RaceSnapshot = new ArrayList<>();
+
+        RaceSnapshot.add(returnMultiplePrint('=',raceLength+3));  //top edge of track
+
+        for(int i = 1; i < lanes + 1; i++){
+            if(horseMap.get(i) != null){
+                RaceSnapshot.add(returnPrintLane(horseMap.get(i)));
+            } else {
+                RaceSnapshot.add(returnPrintLane());
+            }
+        }
+
+
+
+        RaceSnapshot.add(returnMultiplePrint('=',raceLength+3)); //bottom edge of track
+
+
+        return RaceSnapshot;
+    }
+
+    private String returnMultiplePrint(char aChar, int times)
+    {
+        ArrayList<String> LineString = new ArrayList<>();
+        int i = 0;
+        while (i < times)
+        {
+            LineString.add(String.valueOf(aChar));
+            i = i + 1;
+        }
+        StringBuffer stringBuffer = new StringBuffer();
+
+        for (String S : LineString){
+            stringBuffer.append(S);
+        }
+
+        String stringOutput = stringBuffer.toString();
+
+        return stringOutput;
+    }
+
+
+    private String returnPrintLane(Horse theHorse)
+    {
+        ArrayList<String> LineOutput = new ArrayList<>();
+        //calculate how many spaces are needed before
+        //and after the horse
+        int spacesBefore = theHorse.getDistanceTravelled();
+        int spacesAfter = raceLength - theHorse.getDistanceTravelled();
+
+        //| for the beginning of the lane
+        LineOutput.add("|");
+
+
+        LineOutput.add(returnMultiplePrint(' ',spacesBefore));
+
+        if(theHorse.hasFallen())
+        {
+            LineOutput.add("\u274C");
+        }
+        else
+        {
+            LineOutput.add(String.valueOf(theHorse.getSymbol()));
+        }
+
+
+        LineOutput.add(returnMultiplePrint(' ',spacesAfter));
+
+
+        LineOutput.add("|");
+//        System.out.print(" " +  theHorse.getName().toUpperCase() + " (Current Confidence: " );
+//        System.out.printf("%.1f" , theHorse.getConfidence());
+//        System.out.print(")");
+
+        StringBuffer stringBuffer = new StringBuffer();
+        for (String S : LineOutput){
+            stringBuffer.append(S);
+        }
+
+        String outputString = stringBuffer.toString();
+
+        return outputString;
+    }
+
+    private String returnPrintLane() throws UnsupportedEncodingException
+    {
+        ArrayList<String> LineOutput = new ArrayList<>();
+
+        //| for the beginning of the lane
+        LineOutput.add("|");
+
+        LineOutput.add(returnMultiplePrint(' ',raceLength));
+
+        LineOutput.add("|");
+=
+
+        StringBuffer stringBuffer = new StringBuffer();
+        for (String S : LineOutput){
+            stringBuffer.append(S);
+        }
+
+        String outputString = stringBuffer.toString();
+
+        return outputString;
+
     }
 
 
