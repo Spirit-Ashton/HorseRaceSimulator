@@ -126,7 +126,7 @@ public class GUI extends JFrame implements Runnable{
                             }
                         }catch (Exception é){}
                     }
-                    try {p
+                    try {
                         HomeScreen();
                         StartRaceGUI();
                         Thread raceThread = new Thread(mainRace);
