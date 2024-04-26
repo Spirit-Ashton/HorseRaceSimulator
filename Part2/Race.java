@@ -15,7 +15,7 @@ import java.io.UnsupportedEncodingException;
  * @Editor Spirit-Ashton
  * @version 2.0
  */
-public class Race
+public class Race extends Thread
 {
     private int raceLength;
     private int lanes;
@@ -56,6 +56,15 @@ public class Race
 //        horseArray.add(theHorse);
     }
 
+    @Override
+    public void run() {
+        try {
+            startRace();
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     /**
      * Start the race
      * The horse are brought to the start and
@@ -82,20 +91,21 @@ public class Race
 
         while (!finished)
         {
+
             //move each horse
-//            moveHorse(lane1Horse);
-//            moveHorse(lane2Horse);
-//            moveHorse(lane3Horse);
-//            for(int i = 0; i < horseArray.size(); i++)
-//            {
-//                moveHorse(horseArray.get(i));
-//            }
             for(Horse H : horseMap.values()){
                 moveHorse(H);
             }
 
             //print the race positions
             printRace();
+            try {
+                GUI MainGUI = GUI.getInstance();
+                Thread GUIThread = new Thread(MainGUI);
+                GUIThread.start();
+            }catch(Exception e){
+
+            }
 
             //if any of the three horses has won the race is finished
 //            if ( raceWonBy(lane1Horse) || raceWonBy(lane2Horse) || raceWonBy(lane3Horse) )
@@ -115,6 +125,7 @@ public class Race
             }
             //wait for 100 milliseconds
             try{
+
                 TimeUnit.MILLISECONDS.sleep(100);
             }catch(Exception e){}
 
@@ -144,6 +155,84 @@ public class Race
         }
     }
 
+    public void startRace(GUI Parent) throws UnsupportedEncodingException
+    {
+        PrintStream out = new PrintStream(System.out, true, "UTF-8");
+        //declare a local variable to tell us when the race is finished
+        boolean finished = false;
+
+        //reset all the lanes (all horses not fallen and back to 0).
+//        lane1Horse.goBackToStart();
+//        lane2Horse.goBackToStart();
+//        lane3Horse.goBackToStart();
+//        for(int i = 0; i < horseArray.size(); i++)
+//        {
+//            horseArray.get(i).goBackToStart();
+//        }
+        for (Horse H : horseMap.values()){
+            H.goBackToStart();
+        }
+
+        while (!finished)
+        {
+
+            //move each horse
+            for(Horse H : horseMap.values()){
+                moveHorse(H);
+            }
+
+            //print the race positions
+            printRace();
+            Thread GUIThread = new Thread(Parent);
+            GUIThread.start();
+
+            //if any of the three horses has won the race is finished
+//            if ( raceWonBy(lane1Horse) || raceWonBy(lane2Horse) || raceWonBy(lane3Horse) )
+//            {
+//                finished = true;
+//            }
+//            for(int i = 0; i < horseArray.size(); i++)
+//            {
+//                if (raceWonBy(horseArray.get(i))){
+//                    finished = true;
+//                }
+//            }
+            for(Horse H : horseMap.values()){
+                if(raceWonBy(H)){
+                    finished = true;
+                }
+            }
+            //wait for 100 milliseconds
+            try{
+
+                TimeUnit.MILLISECONDS.sleep(100);
+            }catch(Exception e){}
+
+//            if(lane1Horse.hasFallen() && lane2Horse.hasFallen() && lane3Horse.hasFallen())
+//            {
+//                System.out.print("All Horses have fallen!");
+//                finished = true;
+//            }
+            boolean allFall= true;
+
+//            for(int i = 0; i < horseArray.size(); i++)
+//            {
+//                if (!horseArray.get(i).hasFallen()){
+//                    allFall = false;
+//                }
+//            }
+            for (Horse H : horseMap.values()){
+                if(!H.hasFallen()){
+                    allFall = false;
+                }
+            }
+
+            if (allFall) {
+                System.out.print("All Horses have fallen!");
+                finished = true;
+            }
+        }
+    }
     /**
      * Randomly make a horse move forward or fall depending
      * on its confidence rating

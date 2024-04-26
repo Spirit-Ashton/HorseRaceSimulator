@@ -1,26 +1,32 @@
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
-import java.awt.event.ActionListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
 import java.awt.geom.CubicCurve2D;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 
 
-public class GUI extends JFrame{
+public class GUI extends JFrame implements Runnable{
+
 
     private static Race mainRace;
     private static JFrame mainFrame;
     private static JPanel HomeScreen;
     private static JPanel CurrentScreen;
     private static ArrayList<Horse> AllHorses = new ArrayList<>();
+    private static GridBagConstraints gridConstraints;
+    private static ArrayList<JPanel> RaceSnapshot;
+    private static JPanel RaceScreen;
+    private static final GUI Instance = new GUI();
 
-    public GUI() {
+    public static GUI getInstance(){
+        return Instance;
+    }
+    private GUI() {
 
         //Screen Initialisation////////////////////////////////////////////////////////////////
 
@@ -69,7 +75,7 @@ public class GUI extends JFrame{
             TitlePanel.setBackground(new Color(0,0,0,0));
             TitleLabel.setForeground(Color.decode("#FFF8F0"));
 
-            GridBagConstraints gridConstraints = new GridBagConstraints();
+            gridConstraints = new GridBagConstraints();
 
             gridConstraints.insets = new Insets(2,2,2,2);
             gridConstraints.gridx = 0;
@@ -106,7 +112,15 @@ public class GUI extends JFrame{
                 CHMainPanel.setName("Delete");
 
                 JButton StartRaceButton = new JButton("Start Race!");
-                StartRaceButton.addActionListener(E -> StartRaceGUI());
+                StartRaceButton.addActionListener(E -> {
+                    try {
+                        StartRaceGUI();
+                        Thread raceThread = new Thread(mainRace);
+                        raceThread.start();
+                    } catch (UnsupportedEncodingException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                });
                 StartRaceButton.setBackground(Color.decode("#261D03"));
                 StartRaceButton.setForeground(Color.decode("#FFC685"));
                 StartRaceButton.setFocusPainted(false);
@@ -466,7 +480,9 @@ public class GUI extends JFrame{
 
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(GUI::new);
+//        GUI mainGUI = new GUI();
+//        SwingUtilities.invokeLater(mainGUI);
+        SwingUtilities.invokeLater(Instance);
     }
 
     public void switchScreens(JPanel ScreenOff,  JPanel ScreenOn){
@@ -617,7 +633,7 @@ public class GUI extends JFrame{
         ButtonPanel.setBackground(new Color(0,0,0,0));
 
         JButton[] LaneButtons = new JButton[mainRace.getLanes()];
-        GridBagConstraints gridConstraints = new GridBagConstraints();
+        gridConstraints = new GridBagConstraints();
         gridConstraints.insets = new Insets(2,2,2,2);
         gridConstraints.gridx = 0;
         gridConstraints.gridy = 0;
@@ -697,21 +713,87 @@ public class GUI extends JFrame{
         return;
     }
 
-    public void StartRaceGUI(){
-        JDialog RaceDialog = new JDialog(mainFrame, "Race!", Dialog.ModalityType.DOCUMENT_MODAL);
+    public void StartRaceGUI() throws UnsupportedEncodingException {
+        JDialog RaceDialog = new JDialog(mainFrame, "Race!");
+//        RaceDialog.setLayout(new CardLayout());
+//        RaceDialog.setSize(mainFrame.getSize());
+//        RaceDialog.setLocationRelativeTo(mainFrame);
+
+//        JFrame RaceDialog = new JFrame( "Race!");
         RaceDialog.setLayout(new CardLayout());
         RaceDialog.setSize(mainFrame.getSize());
         RaceDialog.setLocationRelativeTo(mainFrame);
 
-        JPanel RaceScreen = new JPanel(new GridBagLayout());
+        JPanel MainHolder = new JPanel(new GridBagLayout());
+        MainHolder.setBackground(Color.decode("#3A2F5A"));
+
+        JPanel InfoPane = new JPanel(new GridBagLayout());
+        InfoPane.setBackground(Color.decode("#23231A"));
+        InfoPane.setBorder(new LineBorder(Color.red, 2));
+//        InfoPane.setSize(500,300);
+
+        gridConstraints.insets = new Insets(2,2,100,2);
+        gridConstraints.gridx = 0;
+        gridConstraints.gridy = 0;
+        gridConstraints.ipadx = 0;
+        gridConstraints.ipady = 0;
+
+        MainHolder.add(InfoPane, gridConstraints);
+
+        JLabel InfoLabel = new JLabel("Nom");
+        InfoLabel.setForeground(Color.decode("#FFF8F0"));
+
+
+        gridConstraints.insets = new Insets(2,2,2,2);
+        gridConstraints.gridx = 0;
+        gridConstraints.gridy = 2;
+        gridConstraints.ipadx = 0;
+        gridConstraints.ipady = 0;
+
+        InfoPane.add(InfoLabel,gridConstraints);
+
+
+        RaceScreen = new JPanel(new GridBagLayout());
         RaceScreen.setBackground(Color.decode("#392F5A"));
+        RaceScreen.setBorder(new LineBorder(Color.BLACK, 2));
 
-        RaceDialog.add(RaceScreen);
+        gridConstraints.insets = new Insets(40,2,2,2);
+        gridConstraints.gridx = 0;
+        gridConstraints.gridy = 0;
+        gridConstraints.ipadx = 0;
+        gridConstraints.ipady = 0;
 
-        GridBagConstraints gridConstraints = new GridBagConstraints();
+        MainHolder.add(RaceScreen,gridConstraints);
 
-        ArrayList<JPanel> RaceSnapshot= new ArrayList<>();
-        
+        RaceDialog.add(MainHolder);
+
+        gridConstraints = new GridBagConstraints();
+
+        RaceSnapshot= new ArrayList<>();
+
+        trackSnapshot(gridConstraints, RaceSnapshot, RaceScreen);
+
+        RaceDialog.setVisible(true);
+
+//        mainRace.startRace();
+        return;
+    }
+
+//    public void threadStartRace(ActionEvent E){
+//        new Thread(() -> {
+//            try {
+//                mainRace.startRace();
+//            } catch (UnsupportedEncodingException e) {
+//                throw new RuntimeException(e);
+//            }
+//        }).start();
+//    }
+
+    private static void trackSnapshot(GridBagConstraints gridConstraints, ArrayList<JPanel> RaceSnapshot, JPanel RaceScreen) {
+        RaceSnapshot = new ArrayList<>();
+        RaceScreen.removeAll();
+
+
         JPanel RaceBlock = new JPanel();
 
         gridConstraints.insets = new Insets(2,2,2,2);
@@ -720,71 +802,87 @@ public class GUI extends JFrame{
         gridConstraints.ipadx = 5;
         gridConstraints.ipady = 5;
 
+
         for(int k = 0; k < mainRace.getLanes(); k++) {
-            for (int i = 0; i < mainRace.getRaceLength(); i++) {
-                gridConstraints.gridx = i;
-                RaceBlock = new JPanel();
-                RaceBlock.setBackground(Color.decode("#23231a"));
-                RaceSnapshot.add(RaceBlock);
-                RaceScreen.add(RaceBlock, gridConstraints);
-            }
+            BarrierLane(gridConstraints, RaceSnapshot, RaceScreen);
             gridConstraints.gridy = gridConstraints.gridy - 1;
-            for (int i = 0; i < mainRace.getRaceLength() ; i++) {
-                gridConstraints.gridx = i;
-                RaceBlock = new JPanel();
-                RaceBlock.setBackground(Color.decode("#392F5A"));
-                if(i == 0 || i == mainRace.getRaceLength() - 1){
-                    RaceBlock.setBackground(Color.decode("#23231a"));
-                }
-                RaceSnapshot.add(RaceBlock);
-                RaceScreen.add(RaceBlock, gridConstraints);
+            if(mainRace.getHorseMap().get(k + 1) != null){
+                occupiedLane(gridConstraints, RaceSnapshot, RaceScreen, mainRace.getHorseMap().get(k + 1));
+            } else {
+                emptyLane(gridConstraints, RaceSnapshot, RaceScreen);
             }
             gridConstraints.gridx = 0;
             gridConstraints.gridy = gridConstraints.gridy - 1;
         }
         gridConstraints.gridy = gridConstraints.gridy - 1;
-        for (int i = 0; i < mainRace.getRaceLength(); i++) {
+        BarrierLane(gridConstraints, RaceSnapshot, RaceScreen);
+
+
+        RaceScreen.repaint();
+        RaceScreen.revalidate();
+    }
+
+    private static void BarrierLane(GridBagConstraints gridConstraints, ArrayList<JPanel> RaceSnapshot, JPanel RaceScreen) {
+        JPanel RaceBlock;
+        for (int i = 0; i < mainRace.getRaceLength() + 2; i++) {
             gridConstraints.gridx = i;
             RaceBlock = new JPanel();
             RaceBlock.setBackground(Color.decode("#23231a"));
             RaceSnapshot.add(RaceBlock);
             RaceScreen.add(RaceBlock, gridConstraints);
         }
-
-
-
-//        for(int i = 0; i < RaceStringSnapshot.size(); i++){
-//            JPanel RaceBlock = new JPanel();
-//            if(RaceStringSnapshot.get(i).equals("=")) {
-//                RaceBlock.setBackground(Color.decode("#23231a"));
-//            } else {
-//                RaceBlock.setBackground(Color.decode("#392f5a"));
-//            }
-//            RaceBlock.setSize(20,20);
-//
-//            RaceSnapshot.add(RaceBlock);
-//
-//
-//            RaceScreen.add(RaceSnapshot.get(i), gridConstraints);
-//
-//
-//           gridConstraints.gridx = gridConstraints.gridx + 1;
-//
-//            if(i % (mainRace.getRaceLength() + 3) == (mainRace.getRaceLength())){
-//                gridConstraints.gridx = 0;
-//                gridConstraints.gridy = gridConstraints.gridy - 1;
-//            }
-//        }
-
-//        for(int i = 0; i < mainRace.getRaceLength(); i++){
-//
-//        }
-
-
-        RaceDialog.setVisible(true);
-
-        return;
     }
+
+    private static void emptyLane(GridBagConstraints gridConstraints, ArrayList<JPanel> RaceSnapshot, JPanel RaceScreen) {
+        JPanel RaceBlock;
+        for (int i = 0; i < mainRace.getRaceLength() + 2 ; i++) {
+            gridConstraints.gridx = i;
+            RaceBlock = new JPanel();
+            RaceBlock.setBackground(Color.decode("#392F5A"));
+            if(i == 0 || i == mainRace.getRaceLength() + 1){
+                RaceBlock.setBackground(Color.decode("#23231a"));
+            }
+            RaceSnapshot.add(RaceBlock);
+            RaceScreen.add(RaceBlock, gridConstraints);
+        }
+    }
+
+    private static void occupiedLane(GridBagConstraints gridConstraints, ArrayList<JPanel> RaceSnapshot, JPanel RaceScreen, Horse thisHorse) {
+        JPanel RaceBlock;
+        for (int i = 0; i < mainRace.getRaceLength() + 2 ; i++) {
+            gridConstraints.gridx = i;
+            RaceBlock = new JPanel();
+            RaceBlock.setBackground(Color.decode("#392F5A"));
+            if(i == 0 || i == mainRace.getRaceLength() + 1){
+                RaceBlock.setBackground(Color.decode("#23231a"));
+            }
+            if(i == thisHorse.getDistanceTravelled() + 1){
+                if(thisHorse.hasFallen()){
+                    RaceBlock.setBackground(Color.decode("#140A00"));
+                } else {
+                    RaceBlock.setBackground(Color.decode("#FF8811"));
+                    }
+            }
+            RaceSnapshot.add(RaceBlock);
+            RaceScreen.add(RaceBlock, gridConstraints);
+        }
+    }
+
+    @Override
+    public void run() {
+        try {
+            UpdateRace();
+        } catch(Exception e){
+
+        }
+    }
+
+    public static void UpdateRace() throws UnsupportedEncodingException {
+//        Instance.StartRaceGUI();
+            trackSnapshot(gridConstraints, RaceSnapshot, RaceScreen);
+    }
+
+
 
     public void StartRace(){
         try {
