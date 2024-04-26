@@ -710,7 +710,71 @@ public class GUI extends JFrame{
 
         GridBagConstraints gridConstraints = new GridBagConstraints();
 
-        ArrayList<JPanel> RaceBorder = new ArrayList<>();
+        ArrayList<JPanel> RaceSnapshot= new ArrayList<>();
+        
+        JPanel RaceBlock = new JPanel();
+
+        gridConstraints.insets = new Insets(2,2,2,2);
+        gridConstraints.gridx = 0;
+        gridConstraints.gridy = 0;
+        gridConstraints.ipadx = 5;
+        gridConstraints.ipady = 5;
+
+        for(int k = 0; k < mainRace.getLanes(); k++) {
+            for (int i = 0; i < mainRace.getRaceLength(); i++) {
+                gridConstraints.gridx = i;
+                RaceBlock = new JPanel();
+                RaceBlock.setBackground(Color.decode("#23231a"));
+                RaceSnapshot.add(RaceBlock);
+                RaceScreen.add(RaceBlock, gridConstraints);
+            }
+            gridConstraints.gridy = gridConstraints.gridy - 1;
+            for (int i = 0; i < mainRace.getRaceLength() ; i++) {
+                gridConstraints.gridx = i;
+                RaceBlock = new JPanel();
+                RaceBlock.setBackground(Color.decode("#392F5A"));
+                if(i == 0 || i == mainRace.getRaceLength() - 1){
+                    RaceBlock.setBackground(Color.decode("#23231a"));
+                }
+                RaceSnapshot.add(RaceBlock);
+                RaceScreen.add(RaceBlock, gridConstraints);
+            }
+            gridConstraints.gridx = 0;
+            gridConstraints.gridy = gridConstraints.gridy - 1;
+        }
+        gridConstraints.gridy = gridConstraints.gridy - 1;
+        for (int i = 0; i < mainRace.getRaceLength(); i++) {
+            gridConstraints.gridx = i;
+            RaceBlock = new JPanel();
+            RaceBlock.setBackground(Color.decode("#23231a"));
+            RaceSnapshot.add(RaceBlock);
+            RaceScreen.add(RaceBlock, gridConstraints);
+        }
+
+
+
+//        for(int i = 0; i < RaceStringSnapshot.size(); i++){
+//            JPanel RaceBlock = new JPanel();
+//            if(RaceStringSnapshot.get(i).equals("=")) {
+//                RaceBlock.setBackground(Color.decode("#23231a"));
+//            } else {
+//                RaceBlock.setBackground(Color.decode("#392f5a"));
+//            }
+//            RaceBlock.setSize(20,20);
+//
+//            RaceSnapshot.add(RaceBlock);
+//
+//
+//            RaceScreen.add(RaceSnapshot.get(i), gridConstraints);
+//
+//
+//           gridConstraints.gridx = gridConstraints.gridx + 1;
+//
+//            if(i % (mainRace.getRaceLength() + 3) == (mainRace.getRaceLength())){
+//                gridConstraints.gridx = 0;
+//                gridConstraints.gridy = gridConstraints.gridy - 1;
+//            }
+//        }
 
 //        for(int i = 0; i < mainRace.getRaceLength(); i++){
 //

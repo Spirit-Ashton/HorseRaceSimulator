@@ -318,28 +318,27 @@ public class Race
         }
     }
 
-    public ArrayList<String> returnRace() throws UnsupportedEncodingException{
+    public ArrayList<String> returnRace()
+    {
         ArrayList<String> RaceSnapshot = new ArrayList<>();
 
-        RaceSnapshot.add(returnMultiplePrint('=',raceLength+3));  //top edge of track
+        RaceSnapshot.addAll(returnMultiplePrint('=',raceLength+3));  //top edge of track
 
         for(int i = 1; i < lanes + 1; i++){
             if(horseMap.get(i) != null){
-                RaceSnapshot.add(returnPrintLane(horseMap.get(i)));
+                RaceSnapshot.addAll(returnPrintLane(horseMap.get(i)));
             } else {
-                RaceSnapshot.add(returnPrintLane());
+                RaceSnapshot.addAll(returnPrintLane());
             }
         }
 
-
-
-        RaceSnapshot.add(returnMultiplePrint('=',raceLength+3)); //bottom edge of track
+        RaceSnapshot.addAll(returnMultiplePrint('=',raceLength+3)); //bottom edge of track
 
 
         return RaceSnapshot;
     }
 
-    private String returnMultiplePrint(char aChar, int times)
+    private ArrayList<String> returnMultiplePrint(char aChar, int times)
     {
         ArrayList<String> LineString = new ArrayList<>();
         int i = 0;
@@ -356,11 +355,11 @@ public class Race
 
         String stringOutput = stringBuffer.toString();
 
-        return stringOutput;
+        return LineString;
     }
 
 
-    private String returnPrintLane(Horse theHorse)
+    private ArrayList<String> returnPrintLane(Horse theHorse)
     {
         ArrayList<String> LineOutput = new ArrayList<>();
         //calculate how many spaces are needed before
@@ -372,7 +371,7 @@ public class Race
         LineOutput.add("|");
 
 
-        LineOutput.add(returnMultiplePrint(' ',spacesBefore));
+        LineOutput.addAll(returnMultiplePrint(' ',spacesBefore));
 
         if(theHorse.hasFallen())
         {
@@ -384,7 +383,7 @@ public class Race
         }
 
 
-        LineOutput.add(returnMultiplePrint(' ',spacesAfter));
+        LineOutput.addAll(returnMultiplePrint(' ',spacesAfter));
 
 
         LineOutput.add("|");
@@ -399,17 +398,17 @@ public class Race
 
         String outputString = stringBuffer.toString();
 
-        return outputString;
+        return LineOutput;
     }
 
-    private String returnPrintLane() throws UnsupportedEncodingException
+    private ArrayList<String> returnPrintLane()
     {
         ArrayList<String> LineOutput = new ArrayList<>();
 
         //| for the beginning of the lane
         LineOutput.add("|");
 
-        LineOutput.add(returnMultiplePrint(' ',raceLength));
+        LineOutput.addAll(returnMultiplePrint(' ',raceLength));
 
         LineOutput.add("|");
 
@@ -421,7 +420,7 @@ public class Race
 
         String outputString = stringBuffer.toString();
 
-        return outputString;
+        return LineOutput;
 
     }
 
