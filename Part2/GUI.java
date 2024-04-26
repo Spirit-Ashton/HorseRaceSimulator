@@ -55,7 +55,8 @@ public class GUI extends JFrame implements Runnable{
         JPanel ChooseHorsesScreen = new JPanel(new GridBagLayout());
         ChooseHorsesScreen.setBackground(Color.decode("#392F5A"));
 
-
+        JPanel StatsScreen = new JPanel(new GridBagLayout());
+        StatsScreen.setBackground(Color.decode("#392F5A"));
 
         //Title Screen////////////////////////////////////////////////////////////////////
 
@@ -135,9 +136,6 @@ public class GUI extends JFrame implements Runnable{
                         throw new RuntimeException(ex);
                     }
                 });
-
-
-
 
 
                 ArrayList<JButton> LockedInHorses = new ArrayList<>();
@@ -279,6 +277,51 @@ public class GUI extends JFrame implements Runnable{
             AddHorseButton.addActionListener(e -> switchScreens(HomeScreen, AddHorseScreen));
 
             JButton StatisticsButton = createButton("Statistics and Analytics");
+            StatisticsButton.addActionListener(e -> {
+
+                Horse[] HorseArray = new Horse[AllHorses.size()];
+
+                HorseArray = AllHorses.toArray(HorseArray);
+
+                JList<Horse> HorseList = new JList<>(HorseArray);
+
+                String[] items = {"Apple", "Banana", "Orange", "Grapes", "Pineapple"};
+
+                String[] HorseNameArray = new String[AllHorses.size()];
+
+                int Index = 0;
+
+                for (Horse H : AllHorses){
+                    HorseNameArray[Index] = H.getName();
+                    Index ++;
+                }
+
+                JList<String> StringList = new JList<>(items);
+                StringList.setPreferredSize(new Dimension(800, 200));
+                StringList.setBackground(Color.decode("#FFF8F0"));
+                StringList.setForeground(Color.decode("#23231A"));
+                StringList.setBorder(new LineBorder(Color.BLACK, 0));
+                StringList.setFont(new Font("Dialog", Font.BOLD, 13));
+                StringList.setVisibleRowCount(5);
+                StringList.setFixedCellHeight(25);
+
+                JScrollPane ScrollPane = new JScrollPane(StringList);
+                ScrollPane.setName("Delete");
+                ScrollPane.setBackground(Color.decode("#23231A"));
+                ScrollPane.setForeground(Color.decode("#F4D67B"));
+                ScrollPane.setBorder(new LineBorder(Color.BLACK, 0));
+
+
+                gridConstraints.insets = new Insets(50,2,40,2);
+                gridConstraints.gridx = 0;
+                gridConstraints.gridy = 1;
+                gridConstraints.ipadx = 0;
+                gridConstraints.ipady = 0;
+
+                StatsScreen.add(ScrollPane,gridConstraints);
+
+                switchScreens(HomeScreen, StatsScreen);
+            });
 
             gridConstraints.insets = new Insets(2,2,2,2);
             gridConstraints.gridx = 0;
@@ -488,8 +531,38 @@ public class GUI extends JFrame implements Runnable{
 
         ChooseHorsesScreen.add(chooseHorsesBackButton, gridConstraints);
 
-    //Race Screen////////////////////////////////////////////////////////////////////////////////////////////
+    //Stats Screen////////////////////////////////////////////////////////////////////////////////////////////
 
+        JLabel StatsTitle = new JLabel("Statistics and Analytics");
+        StatsTitle.setForeground(Color.decode("#FFF8F0"));
+        StatsTitle.setFont(new Font("Dialog" , Font.BOLD, 20));
+
+        gridConstraints.insets = new Insets(2,2,2,2);
+        gridConstraints.gridx = 0;
+        gridConstraints.gridy = 0;
+        gridConstraints.ipadx = 0;
+        gridConstraints.ipady = 0;
+
+        StatsScreen.add(StatsTitle,gridConstraints);
+
+
+        JButton StatsBackButton = createButton("Back");
+        StatsBackButton.addActionListener(e -> {
+
+            for( Component C : StatsScreen.getComponents()){
+                try {
+                    if (C.getName().equals("Delete")) {
+                        StatsScreen.remove(C);
+                    }
+                }catch (Exception E){}
+            }
+
+            HomeScreen();
+        });
+
+        gridConstraints.gridy = 2;
+
+        StatsScreen.add(StatsBackButton,gridConstraints);
 
     }
 
