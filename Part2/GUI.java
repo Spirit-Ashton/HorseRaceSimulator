@@ -18,6 +18,7 @@ public class GUI extends JFrame implements Runnable{
     private static JPanel HomeScreen;
     private static JPanel CurrentScreen;
     private static ArrayList<Horse> AllHorses = new ArrayList<>();
+    private static ArrayList<Race> AllRaces = new ArrayList<>();
     private static GridBagConstraints gridConstraints;
     private static ArrayList<JPanel> RaceSnapshot;
     private static JPanel RaceScreen;
@@ -140,6 +141,7 @@ public class GUI extends JFrame implements Runnable{
                     try {
                         HomeScreen();
                         StartRaceGUI();
+                        AllRaces.add(mainRace);
                         Thread raceThread = new Thread(mainRace);
                         raceThread.start();
                     } catch (UnsupportedEncodingException ex) {
@@ -219,7 +221,6 @@ public class GUI extends JFrame implements Runnable{
                                 }
 
                                 if(LockedInHorses.size() >= 2){
-                                    System.out.println(LockedInHorses);
                                     StartRaceButton.setEnabled(true);
                                     StartRaceButton.setBackground(Color.decode("#F4D06F"));
                                     StartRaceButton.setForeground(Color.decode("#23231A"));
@@ -696,6 +697,18 @@ public class GUI extends JFrame implements Runnable{
                 J.setText(checkReturn);
             }
         }
+        try {
+            if (Integer.valueOf(TextFields[0].getText()) > 12) {
+                Accepted = false;
+                TextFields[0].setText("12 or Under");
+            }
+        } catch (NumberFormatException e){}
+        try {
+            if (Integer.valueOf(TextFields[1].getText()) > 50) {
+                Accepted = false;
+                TextFields[1].setText("50 or Under");
+            }
+        }catch (NumberFormatException e){}
 
         if(Accepted == true){
             NewRace(TextFields[0].getText(), TextFields[1].getText());
@@ -715,6 +728,12 @@ public class GUI extends JFrame implements Runnable{
         if(!checkReturn.equals("Applicable")){
             Accepted = false;
             HorseConfidence.setText(checkReturn);
+        }
+        for(Horse H : AllHorses){
+            if(H.getName().equals(HorseName.getText())){
+                Accepted = false;
+                HorseName.setText("Name Taken");
+            }
         }
 
         if(Accepted == true){
@@ -958,15 +977,6 @@ public class GUI extends JFrame implements Runnable{
         return;
     }
 
-//    public void threadStartRace(ActionEvent E){
-//        new Thread(() -> {
-//            try {
-//                mainRace.startRace();
-//            } catch (UnsupportedEncodingException e) {
-//                throw new RuntimeException(e);
-//            }
-//        }).start();
-//    }
 
     private static void trackSnapshot(GridBagConstraints gridConstraints, ArrayList<JPanel> RaceSnapshot, JPanel RaceScreen, ArrayList<JPanel> InfoPanes) {
         RaceSnapshot = new ArrayList<>();
