@@ -321,10 +321,42 @@ public class GUI extends JFrame implements Runnable{
                     gridConstraints.ipady = 0;
 
                     StatsScreen.add(ScrollPane, gridConstraints);
+
+                    JButton saveDataButton = createButton("Save Data");
+                    saveDataButton.setName("Delete");
+                    saveDataButton.addActionListener(E -> {
+                        try {
+                            SaveHorses();
+                        } catch (IOException ex) {
+                            throw new RuntimeException(ex);
+                        }
+
+                        JOptionPane.showMessageDialog(null,
+                                "Data has been Saved");
+                        HomeScreen();
+                    });
+
+                    gridConstraints.insets = new Insets(50, 2, 2, 2);
+                    gridConstraints.gridx = 0;
+                    gridConstraints.gridy = 3;
+                    gridConstraints.ipadx = 0;
+                    gridConstraints.ipady = 0;
+
+                    StatsScreen.add(saveDataButton,gridConstraints);
+
                 } else{
                     JLabel NoDataLabel = new JLabel("There is No Horse Data to be shown!");
                     NoDataLabel.setForeground(Color.decode("#FFF8F0"));
                     NoDataLabel.setFont(new Font("Dialog", Font.BOLD, 16));
+                    NoDataLabel.setName("Delete");
+
+                    gridConstraints.insets = new Insets(50, 2, 40, 2);
+                    gridConstraints.gridx = 0;
+                    gridConstraints.gridy = 1;
+                    gridConstraints.ipadx = 0;
+                    gridConstraints.ipady = 0;
+
+                    StatsScreen.add(NoDataLabel,gridConstraints);
                 }
 
                 switchScreens(HomeScreen, StatsScreen);
