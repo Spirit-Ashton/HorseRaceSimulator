@@ -1,8 +1,10 @@
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
+import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.event.WindowEvent;
 import java.awt.geom.CubicCurve2D;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -139,12 +141,33 @@ public class GUI extends JFrame{
                         CHMainPanel.add(noHorsesLabel);
                     } else {
                         for (JLabel J : HorseLabelMap.values()) {
+
                             JPanel CHBlockPanel = new JPanel(new GridBagLayout());
                             CHBlockPanel.setBackground(new Color(0,0,0,0));
     //                        CHBlockPanel.setBorder(new LineBorder(Color.decode("#23231A"), 2));
 
                             JButton chooseHorseButton = createButton("Select!");
-                            chooseHorseButton.addActionListener(E -> addHorseScreen());
+                            chooseHorseButton.addActionListener(E -> {
+                                Horse thisHorse = null;
+                                for(Horse H : HorseLabelMap.keySet()){
+                                    if(HorseLabelMap.get(H).equals(J)){
+                                        thisHorse = H;
+                                    }
+                                }
+                                int laneValue = addHorseScreen(thisHorse);
+                                System.out.println(laneValue);
+
+                                if (laneValue != -1){
+                                    chooseHorseButton.setText("Lane: " + laneValue);
+                                    chooseHorseButton.setBackground(Color.decode("#261D03"));
+                                    chooseHorseButton.setForeground(Color.decode("#FFC685"));
+                                    chooseHorseButton.setBorderPainted(false);
+                                    for ( ActionListener AL : chooseHorseButton.getActionListeners()){
+                                        chooseHorseButton.removeActionListener(AL);
+                                        chooseHorseButton.setEnabled(false);
+                                    }
+                                }
+                            });
 
                             gridConstraints.insets = new Insets(2,2,20,2);
                             gridConstraints.gridx = 0;
@@ -554,8 +577,17 @@ public class GUI extends JFrame{
         return newButton;
     }
 
-    public int addHorseScreen(){
-        JFrame ChooseLaneFrame = new JFrame("Choose Lane");
+
+    public int addHorseScreen(Horse Horse){
+        final int[] ChosenPosition = {-1};
+
+        JDialog ChooseLaneFrame = new JDialog(mainFrame, "Choose Lane", Dialog.ModalityType.DOCUMENT_MODAL);
+        ChooseLaneFrame.setLayout(new CardLayout());
+
+
+//        JFrame ChooseLaneFrame = new JFrame("Choose Lane");
+
+
         ChooseLaneFrame.setLayout(new CardLayout());
         ChooseLaneFrame.setSize(500,250);
         ChooseLaneFrame.setMaximumSize( new Dimension(800, 900));
@@ -584,8 +616,14 @@ public class GUI extends JFrame{
 
         for(int i = 0; i < mainRace.getLanes(); i++){
 
-
             LaneButtons[i] = createButton("Lane " +( i + 1));
+
+            int LanePosition = i + 1;
+            LaneButtons[i].addActionListener(e -> addHorse(Horse, LanePosition));
+            LaneButtons[i].addActionListener(e-> {
+                ChosenPosition[0] = LanePosition;
+                ChooseLaneFrame.dispatchEvent(new WindowEvent(ChooseLaneFrame, WindowEvent.WINDOW_CLOSING));
+            });
 
             gridConstraints.gridx = gridConstraints.gridx + 1;
 
@@ -598,6 +636,16 @@ public class GUI extends JFrame{
 
         }
 
+        for(Integer I : mainRace.getHorseMap().keySet()){
+            LaneButtons[I - 1].setText(mainRace.getHorseMap().get(I).getName());
+            LaneButtons[I - 1].setBackground(Color.decode("#261D03"));
+            LaneButtons[I - 1].setForeground(Color.decode("#FFC685"));
+            LaneButtons[I - 1].setBorderPainted(false);
+            for(ActionListener AL : LaneButtons[I - 1].getActionListeners()){
+                LaneButtons[I - 1].removeActionListener(AL);
+            }
+        }
+
 
         gridConstraints.insets = new Insets(2,2,20,2);
         gridConstraints.gridx = 0;
@@ -608,9 +656,6 @@ public class GUI extends JFrame{
 
         MainPanel.add(LaneTitle, gridConstraints);
 
-//        for(JButton K : LaneButtons){
-//            ButtonPanel.add(K);
-//        }
 
         gridConstraints.gridy = 1;
         gridConstraints.insets = new Insets(2,2,20,2);
@@ -624,26 +669,15 @@ public class GUI extends JFrame{
         ChooseLaneFrame.setLocationRelativeTo(mainFrame);
 
         ChooseLaneFrame.setVisible(true);
+//        DialogFrame.setVisible(true);
 
-        return 0;
+        return ChosenPosition[0];
     }
 
-    public void addHorse(){
-        Scanner SCANNER = new Scanner(System.in);
-        char newSymbol;
-        String newName;
-        double newConfidence;
-        System.out.println("What Symbol do you want to represent your horse?(Single Character): ");
-        newSymbol = SCANNER.nextLine().charAt(0);
-        System.out.println("What Name do you want to give your horse?: ");
-        newName = SCANNER.nextLine();
-        System.out.println("How confident is your horse?(between 0-1): ");
-        newConfidence = SCANNER.nextDouble();
-        Horse newHorse = new Horse(newSymbol,newName, newConfidence);
-        int laneNumber;
-        System.out.println("What lane number do you want to put your horse in?: ");
-        laneNumber = SCANNER.nextInt();
-        mainRace.addHorse(newHorse,laneNumber);
+    public void addHorse(Horse Horse, int Lane){
+        mainRace.addHorse(Horse, Lane);
+
+        return;
     }
 
     public void StartRace(){
